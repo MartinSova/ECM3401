@@ -2,10 +2,12 @@
 #include "daemon.h"
 #include <QApplication>
 #include<iostream>
+
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+
     Daemon();
     while (1)
         {
@@ -20,10 +22,11 @@ int main(int argc, char *argv[])
         closelog();
 
        return EXIT_SUCCESS;
-
+    /*
     //QApplication a(argc, argv);
     //MainWindow w;
     //w.show();
 
     //return a.exec();
+    */
 }

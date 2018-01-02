@@ -11,15 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ECM3401
 TEMPLATE = app
 
-include(qtservice/src/qtservice.pri)
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     daemon.cpp \
-    myservice.cpp
 
 HEADERS  += mainwindow.h \
     daemon.h \
-    myservice.h
 
 FORMS    += mainwindow.ui
