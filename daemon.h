@@ -1,19 +1,26 @@
 #ifndef DAEMON_H
 #define DAEMON_H
 
-#include <stdio.h>
+#include <dirent.h>
+#include <iterator>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
+#include <iostream>
 #include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/types.h>
+#include <string>
 #include <sys/stat.h>
 #include <syslog.h>
+#include <unistd.h>
+#include <vector>
 
 
 class Daemon
 {
 public:
     Daemon();
+    void heartbeat();
+    void runDaemon();
 };
 
 #endif // DAEMON_H
