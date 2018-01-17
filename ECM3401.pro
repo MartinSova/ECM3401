@@ -8,13 +8,22 @@ DEPENDPATH += .
 
 INCLUDEPATH += .
 
-LIBS += -L/usr/local/lib -lusb-1.0
+LIBS += -L/usr/local/lib -lusb-1.0 \
+    -lboost_system \
+    -lboost_filesystem \
+    -lusb
+
+
 
 # Input
 HEADERS += daemon.h \
-    connection.h
+    connection.h \
+    localmanager.h \
+    configmanager.h
 FORMS += mainwindow.ui
 SOURCES += daemon.cpp main.cpp \
-    connection.cpp
+    connection.cpp \
+    localmanager.cpp \
+    configmanager.cpp
 
 

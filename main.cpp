@@ -1,34 +1,24 @@
 #include "daemon.h"
-#include<iostream>
-#include<libusb-1.0/libusb.h>
-#include <sys/statvfs.h>
+#include "localmanager.h"
+#include <iostream>
+#include <libusb-1.0/libusb.h>
+#include <stdio.h>
+#include <dirent.h>
+#include <malloc.h>
+#include <usb.h>
 
 using namespace std;
 
 void printdev(libusb_device *dev); //prototype of the function
 
-static int count = 0;
+
+#define BUF_SIZE 1024
 
 
 int main(int argc, char *argv[])
 {
-    /*
-    libusb_hotplug_callback callback;
-    libusb_init(NULL);
-    libusb_hotplug_prepare_callback(&callback, NULL, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED |
-                                      LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, 0, 0x045a, 0x5005,
-                                      LIBUSB_HOTPLUG_CLASS_ANY, hotplug_callback, NULL);
-    libusb_hotplug_register_callback(&callback);
-    while (count < 2) {
-        usleep(10000);
-    }
-    libusb_hotplug_deregister_callback(&callback);
-    libusb_exit(NULL);
-    */
 
-
-
-    /*
+    // initiate usb library
     libusb_device **devs; //pointer to pointer of device, used to retrieve a list of devices
     libusb_context *ctx = NULL; //a libusb session
     int r; //for return values
@@ -39,39 +29,24 @@ int main(int argc, char *argv[])
             return 1;
     }
     libusb_set_debug(ctx, 3); //set verbosity level to 3, as suggested in the documentation
-    count = libusb_get_device_list(ctx, &devs); //get the list of devices
-    if(count < 0) {
-        cout<<"Get Device Error"<<endl; //there was an error
-    }
-    cout<<count<<" Devices in list."<<endl; //print total number of usb devices
-    ssize_t i; //for iterating through the list
-    for(i = 0; i < count; i++) {
-        printdev(devs[i]); //print specs of this device
-    }
-    libusb_free_device_list(devs, 1); //free the list, unref the devices in it
+
+    localManager l;
+    pair<deviceIds, deviceIds> connectedDevices = l.availableDevices(ctx, devs);
+
+    l.canBeRegistered(ctx, devs, r, connectedDevices.);
+
+
+    //libusb_free_device_list(devs, 1); //free the list, unref the devices in it
     libusb_exit(ctx); //close the session
-    return 0;/
+
+
+    return 0;
+
+    /*
+
+    device registered and connected? yes? do ---->
+    no? ------> canBeRegistered and see if viable for registtration
     */
-
-
-        libusb_device **devs; //pointer to pointer of device, used to retrieve a list of devices
-
-        libusb_context *ctx = NULL; //a libusb session
-        int r; //for return values
-        ssize_t cnt; //holding number of devices in list
-        r = libusb_init(&ctx); //initialize the library for the session we just declared
-        if(r < 0) {
-            cout<<"Init Error "<<r<<endl; //there was an error
-            return 1;
-        }
-        libusb_set_debug(ctx, 3); //set verbosity level to 3, as suggested in the documentation
-
-        cnt = libusb_get_device_list(ctx, &devs); //get the list of devices
-        if(cnt < 0) {
-            cout<<"Get Device Error"<<endl; //there was an error
-            return 1;
-        }
-        cout<<cnt<<" Devices in list."<<endl;
 
 }
 
@@ -135,7 +110,7 @@ void available_devices(struct libusb_context *ctx, libusb_device **devs, int r) 
 
 
 
-
+/*
 void hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev,
                       libusb_hotplug_event event, void *user_data) {
   static libusb_device_handle *handle = NULL;
@@ -157,38 +132,6 @@ void hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev,
   }
   count++;
 }
+*/
 
-void printdev(libusb_device *dev) {
-    libusb_device_descriptor desc;
-    int r = libusb_get_device_descriptor(dev, &desc);
-    if (r < 0) {
-        cout<<"failed to get device descriptor"<<endl;
-        return;
-    }
-    cout<<"Number of possible configurations: "<<(int)desc.bNumConfigurations<<"  ";
-    cout<<"Device Class: "<<(int)desc.bDeviceClass<<"  ";
-    cout<<"VendorID: "<<desc.idVendor<<"  ";
-    cout<<"ProductID: "<<desc.idProduct<<endl;
-    libusb_config_descriptor *config;
-    libusb_get_config_descriptor(dev, 0, &config);
-    cout<<"Interfaces: "<<(int)config->bNumInterfaces<<" ||| ";
-    const libusb_interface *inter;
-    const libusb_interface_descriptor *interdesc;
-    const libusb_endpoint_descriptor *epdesc;
-    for(int i=0; i<(int)config->bNumInterfaces; i++) {
-        inter = &config->interface[i];
-        cout<<"Number of alternate settings: "<<inter->num_altsetting<<" | ";
-        for(int j=0; j<inter->num_altsetting; j++) {
-            interdesc = &inter->altsetting[j];
-            cout<<"Interface Number: "<<(int)interdesc->bInterfaceNumber<<" | ";
-            cout<<"Number of endpoints: "<<(int)interdesc->bNumEndpoints<<" | ";
-            for(int k=0; k<(int)interdesc->bNumEndpoints; k++) {
-                epdesc = &interdesc->endpoint[k];
-                cout<<"Descriptor Type: "<<(int)epdesc->bDescriptorType<<" | ";
-                cout<<"EP Address: "<<(int)epdesc->bEndpointAddress<<" | ";
-            }
-        }
-    }
-    cout<<endl<<endl<<endl;
-    libusb_free_config_descriptor(config);
-}
+
