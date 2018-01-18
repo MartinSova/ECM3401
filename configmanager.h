@@ -3,8 +3,13 @@
 
 #include <vector>
 #include <string>
+#include "json.hpp"
+#include <iostream>
+#include <fstream>
 
 using namespace std;
+
+using json = nlohmann::json;
 
 typedef vector<pair<int,int> > deviceIds;
 

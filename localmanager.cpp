@@ -1,10 +1,5 @@
 #include "localmanager.h"
 
-localManager::localManager()
-{
-
-}
-
 pair<deviceIds, deviceIds> localManager::availableDevices(struct libusb_context *ctx, libusb_device **devs)
 {
     deviceIds connectedRegistered;
@@ -82,10 +77,6 @@ void localManager::canBeRegistered(struct libusb_context *ctx, libusb_device **d
         printf("Couldn't get file system statistics\n");
     }
 
-
-
-
-
     libusb_device_handle *dev_handle; //a device handle
     dev_handle = libusb_open_device_with_vid_pid(ctx, 1452, 33424); //these are vendorID and productID I found for my usb device
 
@@ -140,11 +131,5 @@ void localManager::canBeRegistered(struct libusb_context *ctx, libusb_device **d
 
 
 
-
-void localManager::printdev(libusb_device *dev) {
-
-
-
-}
 
 

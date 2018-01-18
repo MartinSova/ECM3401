@@ -11,16 +11,18 @@
 #include <usb.h>
 #include <vector>
 #include <algorithm>
+#include <typeinfo>
 
 using namespace std;
 
 class localManager
 {
 public:
-    localManager();
-    void canBeRegistered(struct libusb_context *ctx, libusb_device **devs, int r);
-    void printdev(libusb_device *dev);
-    pair<deviceIds, deviceIds> availableDevices(libusb_context *ctx, libusb_device **devs);
+    static void canBeRegistered(struct libusb_context *ctx, libusb_device **devs, int r);
+    static void printdev(libusb_device *dev);
+    static pair<deviceIds, deviceIds> availableDevices(libusb_context *ctx, libusb_device **devs);
+    static void deviceAdded(libusb_device *dev, void *user_data);
+    static void deviceRemoved(libusb_device *dev, void *user_data);
 };
 
 #endif // LOCALMANAGER_H

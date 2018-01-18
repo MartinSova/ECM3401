@@ -19,11 +19,14 @@ LIBS += -L/usr/local/lib -lusb-1.0 \
 HEADERS += daemon.h \
     connection.h \
     localmanager.h \
-    configmanager.h
+    configmanager.h \
+    filemanager.h \
+    json.hpp
 FORMS += mainwindow.ui
 SOURCES += daemon.cpp main.cpp \
     connection.cpp \
     localmanager.cpp \
-    configmanager.cpp
+    configmanager.cpp \
+    filemanager.cpp
 
 
