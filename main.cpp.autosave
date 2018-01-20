@@ -53,14 +53,8 @@ int main(int argc, char *argv[])
 
     //connection *c = new connection();
 
-
-
-    //l.canBeRegistered(ctx, devs, r, connectedDevices.);
-
 /*
-    libusb_register_hotplug_listeners(ctx, deviceAdded, deviceRemoved, 0);
 
-    while(1) libusb_handle_events(ctx);
 */
     //libusb_free_device_list(devs, 1); //free the list, unref the devices in it
 

@@ -23,7 +23,7 @@ pair<deviceIds, deviceIds> localManager::availableDevices(struct libusb_context 
 
     libusb_device_descriptor desc;
 
-    deviceIds currentlyRegisteredDevices = ConfigManager::registeredDevices();
+    deviceIds currentlyRegisteredDevices = ConfigManager::readRegisteredDevices();
 
     for(i = 0; i < count; i++) {
         //bool found = (std::find(my_list.begin(), my_list.end(), my_var) != my_list.end());

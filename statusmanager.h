@@ -1,11 +1,12 @@
-#ifndef CONFIGMANAGER_H
-#define CONFIGMANAGER_H
+#ifndef STATUSMANAGER_H
+#define STATUSMANAGER_H
 
 #include <vector>
 #include <string>
 #include "json.hpp"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,10 +14,10 @@ using json = nlohmann::json;
 
 typedef vector<pair<int,int> > deviceIds;
 
-class ConfigManager
+class StatusManager
 {
 public:
-    static deviceIds readRegisteredDevices();
+    static void writeConnectedDevices(deviceIds devs, bool registered);
 };
 
-#endif // CONFIGMANAGER_H
+#endif // STATUSMANAGER_H

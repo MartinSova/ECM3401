@@ -12,8 +12,8 @@ using json = nlohmann::json;
 class filemanager
 {
 public:
-    static void existsConfiguration();
-    static void existsStatus();
+    static void existsConfigurationFile();
+    static void existsStatusFile();
 };
 
 #endif // FILEMANAGER_H

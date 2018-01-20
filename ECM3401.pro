@@ -21,12 +21,14 @@ HEADERS += daemon.h \
     localmanager.h \
     configmanager.h \
     filemanager.h \
-    json.hpp
+    json.hpp \
+    statusmanager.h
 FORMS += mainwindow.ui
 SOURCES += daemon.cpp main.cpp \
     connection.cpp \
     localmanager.cpp \
     configmanager.cpp \
-    filemanager.cpp
+    filemanager.cpp \
+    statusmanager.cpp
 
 

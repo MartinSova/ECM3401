@@ -25,14 +25,14 @@ void filemanager::existsStatusFile()
 {
     if (ifstream("status.json"))
     {
-         cout << "File already exists" << endl;
+         cout << "status.json already exists" << endl;
          //return false;
     } else {
         // create and write json skeleton data to configuration json file
         ofstream o("status.json");
         if (!ifstream("status.json"))
         {
-             cout << "File could not be created" << endl;
+             cerr << "File could not be created" << endl;
              //return false;
         } else {
             // create json file
