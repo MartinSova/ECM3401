@@ -53,9 +53,7 @@ connection::connection()
       //return EXIT_FAILURE;
     }
 
-    while (true) {
-      libusb_handle_events (NULL);
-    }
+    while (1) libusb_handle_events (NULL);
 
     libusb_exit(ctx); //close the session
 

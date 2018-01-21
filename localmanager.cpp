@@ -55,7 +55,7 @@ pair<deviceIds, deviceIds> localManager::availableDevices(struct libusb_context 
 void localManager::canBeRegistered(struct libusb_context *ctx, libusb_device **devs, int r)
 {
     /* Any file on the filesystem in question */
-    char *filename = "/";
+    const char *filename = "/";
 
     struct statvfs buf;
 

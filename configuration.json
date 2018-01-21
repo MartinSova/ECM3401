@@ -1,0 +1,12 @@
+{
+    "registeredDevices": [
+        {
+            "productId": 2312,
+            "vendorId": 213
+        },
+        {
+            "productId": 1212421,
+            "vendorId": 2408124
+        }
+    ]
+}

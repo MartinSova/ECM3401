@@ -2,6 +2,7 @@
 
 void StatusManager::writeConnectedDevices(deviceIds devs, bool registered)
 {
+
     string deviceType = (registered) ? ("connectedRegistered") : ("connectedNotRegistered");
     if (!ifstream("status.json"))
     {

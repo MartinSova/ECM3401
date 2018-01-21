@@ -1,6 +1,6 @@
 #ifndef LOCALMANAGER_H
 #define LOCALMANAGER_H
-#include <configmanager.h>
+#include "configmanager.h"
 #include <sys/statvfs.h>
 #include <stdio.h>
 #include<iostream>
