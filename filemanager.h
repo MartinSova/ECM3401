@@ -4,6 +4,7 @@
 #include "json.hpp"
 #include <iostream>
 #include <fstream>
+#include <syslog.h>
 
 using namespace std;
 

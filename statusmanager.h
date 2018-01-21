@@ -17,7 +17,8 @@ typedef vector<pair<int,int> > deviceIds;
 class StatusManager
 {
 public:
-    static void writeConnectedDevices(deviceIds devs, bool registered);
+    static void overwriteConnectedDevices(deviceIds devs, string type);
+    static void appendConnectedDevices(pair<int, int> dev, string type);
 };
 
 #endif // STATUSMANAGER_H

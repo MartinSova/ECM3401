@@ -20,10 +20,6 @@
 
 using namespace std;
 
-#define BUF_SIZE 1024
-
-
-
 static void daemon()
 {
     pid_t pid;
@@ -64,7 +60,7 @@ static void daemon()
 
     /* Change the working directory to the root directory */
     /* or another appropriated directory */
-    chdir("/");
+    chdir("/home/martin/ECM3401"); // LATER CHANGE CODE TO AUTOMATICALLY GET CURRENT LOCATION OF MAIN.CPP
 
     /* Close all open file descriptors */
     int x;
@@ -88,19 +84,36 @@ pair<deviceIds, deviceIds> getAvailableDevices()
         nullptr;
     }
     libusb_set_debug(ctx, 3); //set verbosity level to 3, as suggested in the documentation
-    pair<deviceIds, deviceIds> connectedDevices = localManager::availableDevices(ctx, devs);
+    pair<deviceIds, deviceIds> connectedDevices = LocalManager::availableDevices(ctx, devs);
     return connectedDevices;
+}
+
+/**
+ * @brief heartbeat
+ * a method to be called every time daemon wakes up
+ */
+
+void heartbeat()
+{
+    filemanager::existsConfigurationFile();
+    filemanager::existsStatusFile();   
+}
+
+/**
+ * @brief initiate
+ * a method that is run when application first started
+ */
+void initiate()
+{
+    pair<deviceIds, deviceIds> availableDevices = getAvailableDevices();
+    deviceIds connectedRegistered = availableDevices.first;
+    deviceIds connectedNotRegistered = availableDevices.second;
+    StatusManager::overwriteConnectedDevices(connectedNotRegistered, "notRegisteredDevices");
 }
 
 int main(int argc, char *argv[])
 {
-    deviceIds myvector;
-
-    myvector.push_back(make_pair(000000,00000000));
-
-    StatusManager::writeConnectedDevices(myvector, true);
-    syslog (LOG_NOTICE, "HEY.");
-    /*
+    initiate();
     daemon();
     int count = 0;
     while (count < 3)
@@ -108,18 +121,13 @@ int main(int argc, char *argv[])
         //TODO: Insert daemon code here.
         syslog (LOG_NOTICE, "d daemon started.");
 
-
-
+        //heartbeat();
 
         //connection *c = new connection();
 
 
 
-        //filemanager::existsConfigurationFile();
-        //filemanager::existsStatusFile();
-        //pair<deviceIds, deviceIds> availableDevices = getAvailableDevices();
-
-        sleep (20);
+        sleep (100);
 
         count++;
         //break;
@@ -127,7 +135,7 @@ int main(int argc, char *argv[])
     syslog (LOG_NOTICE, "d daemon terminated.");
 
 
-    */
+
     closelog();
     return EXIT_SUCCESS;
 
@@ -147,5 +155,7 @@ int main(int argc, char *argv[])
     no? ------> canBeRegistered and see if viable for registtration
     */
 }
+
+
 
 

@@ -15,10 +15,10 @@
 
 using namespace std;
 
-class localManager
+class LocalManager
 {
 public:
-    static void canBeRegistered(struct libusb_context *ctx, libusb_device **devs, int r);
+    pair<bool, string> canBeRegistered(pair<int,int> devId);
     static void printdev(libusb_device *dev);
     static pair<deviceIds, deviceIds> availableDevices(libusb_context *ctx, libusb_device **devs);
     static void deviceAdded(libusb_device *dev, void *user_data);

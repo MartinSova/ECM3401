@@ -64,9 +64,9 @@ int Connection::hotplug_callback (libusb_context *ctx, libusb_device *dev, libus
   deviceIds registeredDevices = ConfigManager::readRegisteredDevices();
 
   if(find(registeredDevices.begin(), registeredDevices.end(), connectedDevice) != registeredDevices.end()) {
-      /* v contains x */
+      StatusManager::appendConnectedDevices(connectedDevice);
   } else {
-      /* v does not contain x */
+      pair<bool,string> canRegister = LocalManager::canBeRegistered(connectedDevice)
   }
 
   printf ("Device attach: %04x:%04x\n", desc.idVendor, desc.idProduct);

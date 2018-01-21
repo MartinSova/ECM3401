@@ -1,6 +1,6 @@
 #include "localmanager.h"
 
-pair<deviceIds, deviceIds> localManager::availableDevices(struct libusb_context *ctx, libusb_device **devs)
+pair<deviceIds, deviceIds> LocalManager::availableDevices(struct libusb_context *ctx, libusb_device **devs)
 {
     deviceIds connectedRegistered;
     deviceIds connectedNotRegistered;
@@ -52,9 +52,11 @@ pair<deviceIds, deviceIds> localManager::availableDevices(struct libusb_context 
     return make_pair(connectedRegistered, connectedNotRegistered);
 }
 
-void localManager::canBeRegistered(struct libusb_context *ctx, libusb_device **devs, int r)
+pair<bool, string> LocalManager::canBeRegistered(pair<int,int> devId)
 {
     /* Any file on the filesystem in question */
+
+    /*
     const char *filename = "/";
 
     struct statvfs buf;
@@ -127,6 +129,7 @@ void localManager::canBeRegistered(struct libusb_context *ctx, libusb_device **d
     libusb_exit(ctx); //needs to be called to end the
 
     delete[] data; //delete the allocated memory for data
+    */
 }
 
 
