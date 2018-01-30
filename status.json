@@ -1,0 +1,47 @@
+{
+    "insufficientSpaceDevices": [
+        {
+            "productId": 2312,
+            "vendorId": 213
+        },
+        {
+            "productId": 1212421,
+            "vendorId": 2408124
+        }
+    ],
+    "notRegisteredDevices": [
+        {
+            "productId": 33798,
+            "vendorId": 1452
+        },
+        {
+            "productId": 3,
+            "vendorId": 7531
+        },
+        {
+            "productId": 627,
+            "vendorId": 1452
+        },
+        {
+            "productId": 33424,
+            "vendorId": 1452
+        },
+        {
+            "productId": 2,
+            "vendorId": 7531
+        }
+    ],
+    "pid": 4161,
+    "registeredDevices": [
+        {
+            "lastBackup": 1,
+            "productId": 2312,
+            "vendorId": 213
+        },
+        {
+            "lastBackup": 1,
+            "productId": 1212421,
+            "vendorId": 2408124
+        }
+    ]
+}

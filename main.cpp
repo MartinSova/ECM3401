@@ -5,6 +5,8 @@
 #include "statusmanager.h"
 #include <iostream>
 #include <libusb-1.0/libusb.h>
+#include <limits.h>
+#include <sys/inotify.h>
 #include <stdio.h>
 #include <dirent.h>
 #include <malloc.h>
@@ -17,10 +19,21 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <syslog.h>
+#include <cstdlib>
+#include <errno.h>
+#include <error.h>
+#include <poll.h>
 
 using namespace std;
 
-static void daemon()
+/*
+inodes unique only on same partition, so when getting inode must from that specific partition
+*/
+
+#define EVENT_SIZE  ( sizeof (struct inotify_event) )
+#define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
+
+static int daemon()
 {
     pid_t pid;
 
@@ -32,8 +45,10 @@ static void daemon()
         exit(EXIT_FAILURE);
 
     /* Success: Let the parent terminate */
-    if (pid > 0)
+    if (pid > 0) {
+        StatusManager::writePid(getppid());
         exit(EXIT_SUCCESS);
+    }
 
     /* On success: The child process becomes session leader */
     if (setsid() < 0)
@@ -71,6 +86,7 @@ static void daemon()
 
     /* Open the log file */
     openlog ("dissertation", LOG_PID, LOG_DAEMON);
+    return 0;
 }
 
 pair<deviceIds, deviceIds> getAvailableDevices()
@@ -105,6 +121,8 @@ void heartbeat()
  */
 void initiate()
 {
+    filemanager::existsConfigurationFile();
+    filemanager::existsStatusFile();
     pair<deviceIds, deviceIds> availableDevices = getAvailableDevices();
     deviceIds connectedRegistered = availableDevices.first;
     deviceIds connectedNotRegistered = availableDevices.second;
@@ -115,46 +133,88 @@ int main(int argc, char *argv[])
 {
     initiate();
     daemon();
-    int count = 0;
-    while (count < 3)
-    {
-        //TODO: Insert daemon code here.
-        syslog (LOG_NOTICE, "d daemon started.");
-
-        //heartbeat();
-
-        //connection *c = new connection();
 
 
+    int fd, wd, len, i;
+        char buf[sizeof(struct inotify_event) + PATH_MAX];
 
-        sleep (100);
+        if (argc < 2)
+            error(EXIT_FAILURE, 0, "missing argument");
 
-        count++;
-        //break;
-    }
-    syslog (LOG_NOTICE, "d daemon terminated.");
+        if ((fd = inotify_init()) < 0)
+            error(EXIT_FAILURE, errno, "failed to initialize inotify instance");
+
+        for (i = 1; i < argc; i++) {
+             if ((wd = inotify_add_watch (fd, argv[i],
+                                          IN_MODIFY | IN_CREATE | IN_DELETE)) < 0)
+                 error(EXIT_FAILURE, errno,
+                       "failed to add inotify watch for '%s'", argv[i]);
+        }
+syslog (LOG_NOTICE, "daemon started.");
+        int count = 0;
+        while (count < 4)
+        {
+        syslog (LOG_NOTICE, "count: %d", count);
+        struct pollfd pfd = {fd, POLLIN, 0};
+        int ret = poll(&pfd, 1, 0);  // timeout of 50ms
+        if (ret < 0) {
+            fprintf(stderr, "poll failed: %s\n", strerror(errno));
+        } else if (ret == 0) {
+            // Timeout with no events, move on.
+        } else {
+                len = read(fd, buf, sizeof(buf));
+                i = 0;
+                while (i < len) {
+                             struct inotify_event *ie = (struct inotify_event*) &buf[i];
+
+                             printf("event occured for '%s': ", argv[ie->wd]);
+                             if (ie->mask & IN_MODIFY)
+                        syslog (LOG_NOTICE, "%s was modified\n", ie->len ? ie->name : "file");
+
+                             else if (ie->mask & IN_CREATE)
+                                 syslog (LOG_NOTICE, "%s was created\n",  ie->name);
+                             else if (ie->mask & IN_DELETE)
+                                 syslog (LOG_NOTICE, "%s was deleted\n",  ie->name);
+                             else
+                                 syslog (LOG_NOTICE, "unexpected event\n");
+
+                             i += sizeof(struct inotify_event) + ie->len;
+                         }
 
 
+            }
+            //heartbeat();
+            count++;
+            sleep(10);
+            //break;
+        }
 
-    closelog();
-    return EXIT_SUCCESS;
-
-    /*
-    if (availableDevices == nullptr) {
-        cerr << "Init Error" << r << endl; //there was an error
-        return 1;
-    }
-    */
-
-    //libusb_free_device_list(devs, 1); //free the list, unref the devices in it
+        //error(EXIT_FAILURE, len == 0 ? 0 : errno, "failed to read inotify event");
 
 
-    /*
-
-    device registered and connected? yes? do ---->
-    no? ------> canBeRegistered and see if viable for registtration
-    */
 }
+
+
+
+
+
+
+
+/*
+if (availableDevices == nullptr) {
+    cerr << "Init Error" << r << endl; //there was an error
+    return 1;
+}
+*/
+
+//libusb_free_device_list(devs, 1); //free the list, unref the devices in it
+
+
+/*
+
+device registered and connected? yes? do ---->
+no? ------> canBeRegistered and see if viable for registtration
+*/
 
 
 

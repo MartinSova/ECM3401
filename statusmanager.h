@@ -18,7 +18,8 @@ class StatusManager
 {
 public:
     static void overwriteConnectedDevices(deviceIds devs, string type);
-    static void appendConnectedDevices(pair<int, int> dev, string type);
+    static void appendConnectedDevice(pair<int, int> dev, string type);
+    static void writePid(pid_t pid);
 };
 
 #endif // STATUSMANAGER_H

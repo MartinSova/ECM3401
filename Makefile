@@ -455,7 +455,11 @@ configmanager.o: configmanager.cpp configmanager.h \
 		json.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o configmanager.o configmanager.cpp
 
-connection.o: connection.cpp connection.h
+connection.o: connection.cpp connection.h \
+		statusmanager.h \
+		json.hpp \
+		configmanager.h \
+		localmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o connection.o connection.cpp
 
 daemon.o: daemon.cpp daemon.h
@@ -475,8 +479,8 @@ main.o: main.cpp daemon.h \
 		configmanager.h \
 		json.hpp \
 		connection.h \
-		filemanager.h \
-		statusmanager.h
+		statusmanager.h \
+		filemanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 statusmanager.o: statusmanager.cpp statusmanager.h \

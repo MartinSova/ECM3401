@@ -16,7 +16,7 @@ typedef vector<pair<int,int> > deviceIds;
 class ConfigManager
 {
 public:
-    static deviceIds readRegisteredDevices();
+    static bool isRegistered(pair<int,int> device);
 };
 
 #endif // CONFIGMANAGER_H

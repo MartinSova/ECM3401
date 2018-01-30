@@ -25,3 +25,5 @@ SOURCES += configmanager.cpp \
            localmanager.cpp \
            main.cpp \
            statusmanager.cpp
+
+DISTFILES +=

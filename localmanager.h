@@ -15,10 +15,11 @@
 
 using namespace std;
 
+typedef vector<pair<int,int> > deviceIds;
+
 class LocalManager
 {
 public:
-    pair<bool, string> canBeRegistered(pair<int,int> devId);
     static void printdev(libusb_device *dev);
     static pair<deviceIds, deviceIds> availableDevices(libusb_context *ctx, libusb_device **devs);
     static void deviceAdded(libusb_device *dev, void *user_data);
