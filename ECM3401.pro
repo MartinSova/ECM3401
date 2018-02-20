@@ -8,7 +8,6 @@ INCLUDEPATH += .
 
 CONFIG += c++11
 
-# Input
 HEADERS += configmanager.h \
            connection.h \
            daemon.h \
@@ -16,14 +15,16 @@ HEADERS += configmanager.h \
            json.hpp \
            localmanager.h \
            statusmanager.h \
-           ui_mainwindow.h
+           ui_mainwindow.h \
+           filemodmanager.h
+
 FORMS += mainwindow.ui
+
 SOURCES += configmanager.cpp \
            connection.cpp \
            daemon.cpp \
            filemanager.cpp \
            localmanager.cpp \
            main.cpp \
-           statusmanager.cpp
-
-DISTFILES +=
+           statusmanager.cpp \
+           filemodmanager.cpp

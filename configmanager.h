@@ -8,15 +8,15 @@
 #include <fstream>
 
 using namespace std;
-
 using json = nlohmann::json;
 
-typedef vector<pair<int,int> > deviceIds;
+typedef vector<pair<int,int>> deviceIds;
 
 class ConfigManager
 {
 public:
     static bool isRegistered(pair<int,int> device);
+    static deviceIds allRegisteredDevices();
 };
 
 #endif // CONFIGMANAGER_H

@@ -9,10 +9,9 @@
 #include <algorithm>
 
 using namespace std;
-
 using json = nlohmann::json;
 
-typedef vector<pair<int,int> > deviceIds;
+typedef vector<pair<int,int>> deviceIds;
 
 class StatusManager
 {

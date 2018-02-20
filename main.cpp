@@ -2,6 +2,7 @@
 #include "localmanager.h"
 #include "connection.h"
 #include "filemanager.h"
+#include "filemodmanager.h"
 #include "statusmanager.h"
 #include <iostream>
 #include <libusb-1.0/libusb.h>
@@ -22,9 +23,14 @@
 #include <cstdlib>
 #include <errno.h>
 #include <error.h>
+#include <pwd.h>
 #include <poll.h>
+#include <boost/filesystem.hpp>
+#include <boost/range/iterator_range.hpp>
 
 using namespace std;
+using namespace boost::filesystem;
+using namespace boost::system;
 
 /*
 inodes unique only on same partition, so when getting inode must from that specific partition
@@ -112,7 +118,7 @@ pair<deviceIds, deviceIds> getAvailableDevices()
 void heartbeat()
 {
     filemanager::existsConfigurationFile();
-    filemanager::existsStatusFile();   
+    filemanager::existsStatusFile();
 }
 
 /**
@@ -123,38 +129,105 @@ void initiate()
 {
     filemanager::existsConfigurationFile();
     filemanager::existsStatusFile();
+    //filemanager::existsFileModFile();
     pair<deviceIds, deviceIds> availableDevices = getAvailableDevices();
     deviceIds connectedRegistered = availableDevices.first;
     deviceIds connectedNotRegistered = availableDevices.second;
     StatusManager::overwriteConnectedDevices(connectedNotRegistered, "notRegisteredDevices");
 }
 
+int getdir(string rootDir, vector<string> &files)
+{
+    DIR *dir; //the directory
+    struct dirent *dp;
+
+    //open the directory
+    if((dir  = opendir(rootDir.c_str())) == NULL)
+    {
+        cout << "Error(" << errno << ") opening " << rootDir << endl;
+        return errno;
+    }
+
+    while ((dp = readdir(dir)) != NULL)
+    {
+        files.push_back(string(dp->d_name));
+
+
+        //if(directory do something) //need help here
+
+        //if(file do something else)
+    }
+
+    closedir(dir);
+    return 0;
+}
+
+bool containsPath(vector<path> pathVector, path p2)
+{
+    if (find(pathVector.begin(), pathVector.end(), p2) != pathVector.end())
+    {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    // initiate method for before daemon starts
     initiate();
+    // start daemon
     daemon();
+    syslog (LOG_NOTICE, "-------------------");
+    syslog (LOG_NOTICE, "DAEMON STARTING ...");
 
+    // initiate inotify
+    int fd;
+    int wd[2], len, i;
+    int numDir = 0;
 
-    int fd, wd, len, i;
-        char buf[sizeof(struct inotify_event) + PATH_MAX];
+    char buf[sizeof(struct inotify_event) + PATH_MAX];
+    if ((fd = inotify_init()) < 0)
+        error(EXIT_FAILURE, errno, "failed to initialize inotify instance");
+    /*
+    if ((wd[0] = inotify_add_watch (fd, "itests", IN_MODIFY)) < 0) {
+        syslog(LOG_ERR, "failed to add inotify watch for itests");
+    }
+    if ((wd[1] = inotify_add_watch (fd, "itests2", IN_MODIFY)) < 0) {
+        syslog(LOG_ERR, "failed to add inotify watch for itests2");
+    }
+    */
+    // add watch to all current directories
 
-        if (argc < 2)
-            error(EXIT_FAILURE, 0, "missing argument");
-
-        if ((fd = inotify_init()) < 0)
-            error(EXIT_FAILURE, errno, "failed to initialize inotify instance");
-
-        for (i = 1; i < argc; i++) {
-             if ((wd = inotify_add_watch (fd, argv[i],
-                                          IN_MODIFY | IN_CREATE | IN_DELETE)) < 0)
-                 error(EXIT_FAILURE, errno,
-                       "failed to add inotify watch for '%s'", argv[i]);
+    for(auto& p: recursive_directory_iterator("/home/martin/ECM3401")) {
+        try {
+            if (is_directory(p)) {
+                const char *s = p.path().c_str();
+                //syslog(LOG_NOTICE, "%s", s);
+                if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE)) < 0) {
+                    syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
+                } else {
+                    /FileModManager::write(wd[numDir], string(s));
+                    syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
+                    syslog(LOG_NOTICE, "and pathname is");
+                    numDir++;
+                }
+            }
+        } catch(const filesystem_error& e) {
+            if(e.code() == errc::permission_denied) {
+               std::cout << "Search permission is denied for one of the directories "
+                         << "in the path prefix of " << p << "\n";
+           } else {
+               std::cout << "is_directory(" << p << ") failed with "
+                         << e.code().message() << '\n';
+           }
         }
-syslog (LOG_NOTICE, "daemon started.");
-        int count = 0;
-        while (count < 4)
-        {
-        syslog (LOG_NOTICE, "count: %d", count);
+    }
+
+    int count = 0;
+    while (count < 4) {
+        filemanager::existsFileModFile();
+        syslog(LOG_NOTICE, "count: %d", count);
         struct pollfd pfd = {fd, POLLIN, 0};
         int ret = poll(&pfd, 1, 0);  // timeout of 50ms
         if (ret < 0) {
@@ -162,36 +235,34 @@ syslog (LOG_NOTICE, "daemon started.");
         } else if (ret == 0) {
             // Timeout with no events, move on.
         } else {
-                len = read(fd, buf, sizeof(buf));
-                i = 0;
-                while (i < len) {
-                             struct inotify_event *ie = (struct inotify_event*) &buf[i];
+            len = read(fd, buf, sizeof(buf));
+            i = 0;
+            while (i < len) {
+                syslog(LOG_NOTICE, "%d", i);
+                struct inotify_event *ie = (struct inotify_event*) &buf[i];
+                if (ie->mask & IN_MODIFY) {
+                    if ( ie->mask & IN_ISDIR ) {
+                        syslog(LOG_NOTICE, "directory was modified");
+                    } else {
+                        syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
+                        syslog(LOG_NOTICE, "%d wd was modified\n", ie->wd);
+                    }
+                }
+                i += sizeof(struct inotify_event) + ie->len;
 
-                             printf("event occured for '%s': ", argv[ie->wd]);
-                             if (ie->mask & IN_MODIFY)
-                        syslog (LOG_NOTICE, "%s was modified\n", ie->len ? ie->name : "file");
-
-                             else if (ie->mask & IN_CREATE)
-                                 syslog (LOG_NOTICE, "%s was created\n",  ie->name);
-                             else if (ie->mask & IN_DELETE)
-                                 syslog (LOG_NOTICE, "%s was deleted\n",  ie->name);
-                             else
-                                 syslog (LOG_NOTICE, "unexpected event\n");
-
-                             i += sizeof(struct inotify_event) + ie->len;
-                         }
-
-
+                //FileModManager::sort(&fd, &buf);
+                //FileModManager::write(struct inotify_event *ie);
             }
-            //heartbeat();
-            count++;
-            sleep(10);
-            //break;
         }
 
-        //error(EXIT_FAILURE, len == 0 ? 0 : errno, "failed to read inotify event");
 
 
+        count++;
+        sleep(10);
+    }
+    syslog (LOG_NOTICE, "EXITING ...");
+    exit(0);
+    //error(EXIT_FAILURE, len == 0 ? 0 : errno, "failed to read inotify event");
 }
 
 
@@ -211,11 +282,7 @@ if (availableDevices == nullptr) {
 
 
 /*
-
 device registered and connected? yes? do ---->
 no? ------> canBeRegistered and see if viable for registtration
 */
-
-
-
 

@@ -1,10 +1,18 @@
 {
     "registeredDevices": [
         {
+            "filesToOmmit": [
+                "path1",
+                "path2"
+            ],
             "productId": 2312,
             "vendorId": 213
         },
         {
+            "filesToOmmit": [
+                "path1",
+                "path2"
+            ],
             "productId": 1212421,
             "vendorId": 2408124
         }

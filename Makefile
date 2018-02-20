@@ -54,14 +54,16 @@ SOURCES       = configmanager.cpp \
 		filemanager.cpp \
 		localmanager.cpp \
 		main.cpp \
-		statusmanager.cpp 
+		statusmanager.cpp \
+		filemodmanager.cpp 
 OBJECTS       = configmanager.o \
 		connection.o \
 		daemon.o \
 		filemanager.o \
 		localmanager.o \
 		main.o \
-		statusmanager.o
+		statusmanager.o \
+		filemodmanager.o
 DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		../anaconda3/mkspecs/common/unix.conf \
 		../anaconda3/mkspecs/common/linux.conf \
@@ -170,13 +172,15 @@ DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		json.hpp \
 		localmanager.h \
 		statusmanager.h \
-		ui_mainwindow.h configmanager.cpp \
+		ui_mainwindow.h \
+		filemodmanager.h configmanager.cpp \
 		connection.cpp \
 		daemon.cpp \
 		filemanager.cpp \
 		localmanager.cpp \
 		main.cpp \
-		statusmanager.cpp
+		statusmanager.cpp \
+		filemodmanager.cpp
 QMAKE_TARGET  = ECM3401
 DESTDIR       = 
 TARGET        = ECM3401
@@ -411,8 +415,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h json.hpp localmanager.h statusmanager.h ui_mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp localmanager.cpp main.cpp statusmanager.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h json.hpp localmanager.h statusmanager.h ui_mainwindow.h filemodmanager.h $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp localmanager.cpp main.cpp statusmanager.cpp filemodmanager.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -466,7 +470,8 @@ daemon.o: daemon.cpp daemon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o daemon.o daemon.cpp
 
 filemanager.o: filemanager.cpp filemanager.h \
-		json.hpp
+		json.hpp \
+		configmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemanager.o filemanager.cpp
 
 localmanager.o: localmanager.cpp localmanager.h \
@@ -480,12 +485,17 @@ main.o: main.cpp daemon.h \
 		json.hpp \
 		connection.h \
 		statusmanager.h \
-		filemanager.h
+		filemanager.h \
+		filemodmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 statusmanager.o: statusmanager.cpp statusmanager.h \
 		json.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o statusmanager.o statusmanager.cpp
+
+filemodmanager.o: filemodmanager.cpp filemodmanager.h \
+		json.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemodmanager.o filemodmanager.cpp
 
 ####### Install
 
