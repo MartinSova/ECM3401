@@ -5,19 +5,22 @@
 #include <unistd.h>
 #include <syslog.h>
 #include "json.hpp"
+#include "configmanager.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 using json = nlohmann::json;
 
-typedef vector<pair<int,int>> deviceIds;
-
 class FileModManager
 {
 public:
-    static void write(int wd, string pathname);
-    static void clearModFiles();
+    static void writeWatchDesc(int wd, string pathname);
+    static vector<pair<int, string> > readAllWatchDesc();
+    static void update();
+    static void writeModFiles(vector<string> sortedPathnames);
+    static vector<string> readAllModFiles();
+    static void clearDuplicates();
 };
 
 #endif // FILEMODMANAGER_H

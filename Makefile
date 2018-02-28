@@ -494,7 +494,8 @@ statusmanager.o: statusmanager.cpp statusmanager.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o statusmanager.o statusmanager.cpp
 
 filemodmanager.o: filemodmanager.cpp filemodmanager.h \
-		json.hpp
+		json.hpp \
+		configmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemodmanager.o filemodmanager.cpp
 
 ####### Install

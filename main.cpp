@@ -25,16 +25,13 @@
 #include <error.h>
 #include <pwd.h>
 #include <poll.h>
+#include <time.h>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
 
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::system;
-
-/*
-inodes unique only on same partition, so when getting inode must from that specific partition
-*/
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
@@ -198,7 +195,7 @@ int main(int argc, char *argv[])
     }
     */
     // add watch to all current directories
-
+    filemanager::existsFileModFile();
     for(auto& p: recursive_directory_iterator("/home/martin/ECM3401")) {
         try {
             if (is_directory(p)) {
@@ -207,9 +204,9 @@ int main(int argc, char *argv[])
                 if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE)) < 0) {
                     syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
                 } else {
-                    /FileModManager::write(wd[numDir], string(s));
-                    syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
-                    syslog(LOG_NOTICE, "and pathname is");
+                    FileModManager::writeWatchDesc(wd[numDir], string(s));
+                    //syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
+                    //syslog(LOG_NOTICE, "and pathname is");
                     numDir++;
                 }
             }
@@ -226,8 +223,9 @@ int main(int argc, char *argv[])
 
     int count = 0;
     while (count < 4) {
-        filemanager::existsFileModFile();
+        FileModManager::update();
         syslog(LOG_NOTICE, "count: %d", count);
+        vector<string> modifiedFiles;
         struct pollfd pfd = {fd, POLLIN, 0};
         int ret = poll(&pfd, 1, 0);  // timeout of 50ms
         if (ret < 0) {
@@ -235,6 +233,7 @@ int main(int argc, char *argv[])
         } else if (ret == 0) {
             // Timeout with no events, move on.
         } else {
+            vector<pair<int,string>> currentWatchDesc = FileModManager::readAllWatchDesc();
             len = read(fd, buf, sizeof(buf));
             i = 0;
             while (i < len) {
@@ -242,21 +241,28 @@ int main(int argc, char *argv[])
                 struct inotify_event *ie = (struct inotify_event*) &buf[i];
                 if (ie->mask & IN_MODIFY) {
                     if ( ie->mask & IN_ISDIR ) {
-                        syslog(LOG_NOTICE, "directory was modified");
+                        //syslog(LOG_NOTICE, "directory was modified");
                     } else {
-                        syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
-                        syslog(LOG_NOTICE, "%d wd was modified\n", ie->wd);
+                        //syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
+                        for(const auto& wd : currentWatchDesc)
+                        {
+                            if (wd.first == ie->wd) {
+                                string toWrite = (wd.second + "/" + ie->name);
+                                modifiedFiles.push_back(toWrite);
+                                break;
+                            }
+                        }
                     }
                 }
                 i += sizeof(struct inotify_event) + ie->len;
-
-                //FileModManager::sort(&fd, &buf);
-                //FileModManager::write(struct inotify_event *ie);
             }
         }
-
-
-
+        if (!modifiedFiles.empty()) {
+            sort(modifiedFiles.begin(), modifiedFiles.end(), greater<string>());
+            modifiedFiles.erase(unique(modifiedFiles.begin(), modifiedFiles.end()), modifiedFiles.end());
+            FileModManager::writeModFiles(modifiedFiles);
+            FileModManager::clearDuplicates();
+        }
         count++;
         sleep(10);
     }

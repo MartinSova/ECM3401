@@ -1,15 +1,760 @@
 {
     "modFiles": [
+        "/home/martin/ECM3401/itests/a/.~lock.a.odt#",
+        "/home/martin/ECM3401/itests/a/.~lock.b.odt#",
+        "/home/martin/ECM3401/itests/a/a.odt",
+        "/home/martin/ECM3401/itests/a/b.odt",
+        "/home/martin/ECM3401/itests2/.~lock.q.odt#",
+        "/home/martin/ECM3401/itests2/q.odt"
+    ],
+    "watchDesc": [
         {
-            "modFilesToBackup": null,
-            "productId": 2312,
-            "vendorId": 213
+            "path": "/home/martin/ECM3401/itests2",
+            "wdInt": 1
         },
         {
-            "modFilesToBackup": null,
-            "productId": 1212421,
-            "vendorId": 2408124
+            "path": "/home/martin/ECM3401/itests",
+            "wdInt": 2
+        },
+        {
+            "path": "/home/martin/ECM3401/itests/a",
+            "wdInt": 3
+        },
+        {
+            "path": "/home/martin/ECM3401/itests/Untitled Folder",
+            "wdInt": 4
+        },
+        {
+            "path": "/home/martin/ECM3401/.git",
+            "wdInt": 5
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/refs",
+            "wdInt": 6
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/refs/tags",
+            "wdInt": 7
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/refs/heads",
+            "wdInt": 8
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/refs/remotes",
+            "wdInt": 9
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/refs/remotes/origin",
+            "wdInt": 10
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/logs",
+            "wdInt": 11
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/logs/refs",
+            "wdInt": 12
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/logs/refs/heads",
+            "wdInt": 8119952
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/logs/refs/remotes",
+            "wdInt": 0
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/logs/refs/remotes/origin",
+            "wdInt": 50
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/branches",
+            "wdInt": 0
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects",
+            "wdInt": 33
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/10",
+            "wdInt": 0
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/50",
+            "wdInt": 19
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/1a",
+            "wdInt": 20
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/3c",
+            "wdInt": 21
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e8",
+            "wdInt": 22
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/7c",
+            "wdInt": 23
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/91",
+            "wdInt": 24
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/57",
+            "wdInt": 25
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/af",
+            "wdInt": 26
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c9",
+            "wdInt": 27
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/8e",
+            "wdInt": 28
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/72",
+            "wdInt": 29
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e3",
+            "wdInt": 30
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/75",
+            "wdInt": 31
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/36",
+            "wdInt": 32
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/23",
+            "wdInt": 33
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/7b",
+            "wdInt": 34
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/06",
+            "wdInt": 35
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/03",
+            "wdInt": 36
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/5c",
+            "wdInt": 37
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a3",
+            "wdInt": 38
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/1c",
+            "wdInt": 39
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/17",
+            "wdInt": 40
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/59",
+            "wdInt": 41
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/1e",
+            "wdInt": 42
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/d2",
+            "wdInt": 43
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/82",
+            "wdInt": 44
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a8",
+            "wdInt": 45
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9a",
+            "wdInt": 46
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/43",
+            "wdInt": 47
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/4c",
+            "wdInt": 48
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/25",
+            "wdInt": 49
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/5f",
+            "wdInt": 50
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/2e",
+            "wdInt": 51
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/94",
+            "wdInt": 52
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/69",
+            "wdInt": 53
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/65",
+            "wdInt": 54
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/79",
+            "wdInt": 55
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/78",
+            "wdInt": 56
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/0d",
+            "wdInt": 57
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/96",
+            "wdInt": 58
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e2",
+            "wdInt": 59
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a9",
+            "wdInt": 60
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f6",
+            "wdInt": 61
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/3e",
+            "wdInt": 62
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/bd",
+            "wdInt": 63
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/04",
+            "wdInt": 64
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ef",
+            "wdInt": 65
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9d",
+            "wdInt": 66
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/35",
+            "wdInt": 67
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/fc",
+            "wdInt": 68
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e0",
+            "wdInt": 69
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/71",
+            "wdInt": 70
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a5",
+            "wdInt": 71
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/53",
+            "wdInt": 72
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/1d",
+            "wdInt": 73
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/8d",
+            "wdInt": 74
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c7",
+            "wdInt": 75
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/cd",
+            "wdInt": 76
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e6",
+            "wdInt": 77
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/99",
+            "wdInt": 78
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/12",
+            "wdInt": 79
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f5",
+            "wdInt": 80
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/02",
+            "wdInt": 81
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/01",
+            "wdInt": 82
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/18",
+            "wdInt": 83
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/38",
+            "wdInt": 84
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9e",
+            "wdInt": 85
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ed",
+            "wdInt": 86
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/81",
+            "wdInt": 87
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/67",
+            "wdInt": 88
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b6",
+            "wdInt": 89
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/27",
+            "wdInt": 90
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/6b",
+            "wdInt": 91
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/40",
+            "wdInt": 92
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/eb",
+            "wdInt": 93
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/dc",
+            "wdInt": 94
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/4e",
+            "wdInt": 95
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/46",
+            "wdInt": 96
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/83",
+            "wdInt": 97
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9b",
+            "wdInt": 98
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/48",
+            "wdInt": 99
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/fe",
+            "wdInt": 100
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/3a",
+            "wdInt": 101
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/7d",
+            "wdInt": 102
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/7e",
+            "wdInt": 103
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/5e",
+            "wdInt": 104
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/74",
+            "wdInt": 105
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/42",
+            "wdInt": 106
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f1",
+            "wdInt": 107
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/20",
+            "wdInt": 108
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a1",
+            "wdInt": 109
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/68",
+            "wdInt": 110
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ca",
+            "wdInt": 111
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a7",
+            "wdInt": 112
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c8",
+            "wdInt": 113
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/21",
+            "wdInt": 114
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b8",
+            "wdInt": 115
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/6a",
+            "wdInt": 116
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/0b",
+            "wdInt": 117
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/fd",
+            "wdInt": 118
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/77",
+            "wdInt": 119
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/5b",
+            "wdInt": 120
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/47",
+            "wdInt": 121
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/6d",
+            "wdInt": 122
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/2a",
+            "wdInt": 123
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e5",
+            "wdInt": 124
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c2",
+            "wdInt": 125
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f0",
+            "wdInt": 126
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/09",
+            "wdInt": 127
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b7",
+            "wdInt": 128
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/62",
+            "wdInt": 129
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/4f",
+            "wdInt": 130
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/63",
+            "wdInt": 131
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/54",
+            "wdInt": 132
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f2",
+            "wdInt": 133
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/55",
+            "wdInt": 134
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c0",
+            "wdInt": 135
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/19",
+            "wdInt": 136
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/1f",
+            "wdInt": 137
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/89",
+            "wdInt": 138
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e1",
+            "wdInt": 139
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/49",
+            "wdInt": 140
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/95",
+            "wdInt": 141
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/88",
+            "wdInt": 142
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/a6",
+            "wdInt": 143
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/2d",
+            "wdInt": 144
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/87",
+            "wdInt": 145
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/8b",
+            "wdInt": 146
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f3",
+            "wdInt": 147
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b9",
+            "wdInt": 148
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/29",
+            "wdInt": 149
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/34",
+            "wdInt": 150
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ac",
+            "wdInt": 151
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/00",
+            "wdInt": 152
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/0a",
+            "wdInt": 153
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/fa",
+            "wdInt": 154
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/2c",
+            "wdInt": 155
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/f8",
+            "wdInt": 156
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9f",
+            "wdInt": 157
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ae",
+            "wdInt": 158
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c5",
+            "wdInt": 159
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/2f",
+            "wdInt": 160
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/5a",
+            "wdInt": 161
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/e9",
+            "wdInt": 162
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/0f",
+            "wdInt": 163
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/bb",
+            "wdInt": 164
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ab",
+            "wdInt": 165
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b3",
+            "wdInt": 166
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/info",
+            "wdInt": 167
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/52",
+            "wdInt": 168
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/6c",
+            "wdInt": 169
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ec",
+            "wdInt": 170
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/d4",
+            "wdInt": 171
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/51",
+            "wdInt": 172
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/73",
+            "wdInt": 173
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/bf",
+            "wdInt": 174
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/60",
+            "wdInt": 175
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/30",
+            "wdInt": 176
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/16",
+            "wdInt": 177
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/45",
+            "wdInt": 178
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/9c",
+            "wdInt": 179
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/ce",
+            "wdInt": 180
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/07",
+            "wdInt": 181
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b2",
+            "wdInt": 182
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/pack",
+            "wdInt": 183
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/b4",
+            "wdInt": 184
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/objects/c1",
+            "wdInt": 185
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/hooks",
+            "wdInt": 186
+        },
+        {
+            "path": "/home/martin/ECM3401/.git/info",
+            "wdInt": 187
         }
-    ],
-    "watchDesc": null
+    ]
 }
