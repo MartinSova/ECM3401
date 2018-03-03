@@ -4,6 +4,7 @@
 #include "filemanager.h"
 #include "filemodmanager.h"
 #include "statusmanager.h"
+#include "heartbeat.h"
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 #include <limits.h>
@@ -92,27 +93,13 @@ static int daemon()
     return 0;
 }
 
-pair<deviceIds, deviceIds> getAvailableDevices()
-{
-    // initiate usb library
-    libusb_device **devs; //pointer to pointer of device, used to retrieve a list of devices
-    libusb_context *ctx = NULL; //a libusb session
-    int r; //for return values
-    r = libusb_init(&ctx); //initialize a library session
-    if(r < 0) {
-        nullptr;
-    }
-    libusb_set_debug(ctx, 3); //set verbosity level to 3, as suggested in the documentation
-    pair<deviceIds, deviceIds> connectedDevices = LocalManager::availableDevices(ctx, devs);
-    return connectedDevices;
-}
-
 /**
- * @brief heartbeat
+ * @brief wakeup
  * a method to be called every time daemon wakes up
+ * not necessariyl when backup cycles supposed to happen
  */
 
-void heartbeat()
+void wakeup()
 {
     filemanager::existsConfigurationFile();
     filemanager::existsStatusFile();
@@ -127,9 +114,8 @@ void initiate()
     filemanager::existsConfigurationFile();
     filemanager::existsStatusFile();
     //filemanager::existsFileModFile();
-    pair<deviceIds, deviceIds> availableDevices = getAvailableDevices();
-    deviceIds connectedRegistered = availableDevices.first;
-    deviceIds connectedNotRegistered = availableDevices.second;
+    deviceIds connectedRegistered = LocalManager::availableRegisteredDevices();;
+    deviceIds connectedNotRegistered = LocalManager::availableNotRegisteredDevices();
     StatusManager::overwriteConnectedDevices(connectedNotRegistered, "notRegisteredDevices");
 }
 
@@ -223,7 +209,8 @@ int main(int argc, char *argv[])
 
     int count = 0;
     while (count < 4) {
-        FileModManager::update();
+        //FileModManager::update();
+        heartbeat::prepareBackupDirectory();
         syslog(LOG_NOTICE, "count: %d", count);
         vector<string> modifiedFiles;
         struct pollfd pfd = {fd, POLLIN, 0};
@@ -233,6 +220,7 @@ int main(int argc, char *argv[])
         } else if (ret == 0) {
             // Timeout with no events, move on.
         } else {
+            wakeup();
             vector<pair<int,string>> currentWatchDesc = FileModManager::readAllWatchDesc();
             len = read(fd, buf, sizeof(buf));
             i = 0;

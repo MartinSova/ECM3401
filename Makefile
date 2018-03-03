@@ -55,7 +55,8 @@ SOURCES       = configmanager.cpp \
 		localmanager.cpp \
 		main.cpp \
 		statusmanager.cpp \
-		filemodmanager.cpp 
+		filemodmanager.cpp \
+		heartbeat.cpp 
 OBJECTS       = configmanager.o \
 		connection.o \
 		daemon.o \
@@ -63,7 +64,8 @@ OBJECTS       = configmanager.o \
 		localmanager.o \
 		main.o \
 		statusmanager.o \
-		filemodmanager.o
+		filemodmanager.o \
+		heartbeat.o
 DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		../anaconda3/mkspecs/common/unix.conf \
 		../anaconda3/mkspecs/common/linux.conf \
@@ -173,14 +175,16 @@ DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		localmanager.h \
 		statusmanager.h \
 		ui_mainwindow.h \
-		filemodmanager.h configmanager.cpp \
+		filemodmanager.h \
+		heartbeat.h configmanager.cpp \
 		connection.cpp \
 		daemon.cpp \
 		filemanager.cpp \
 		localmanager.cpp \
 		main.cpp \
 		statusmanager.cpp \
-		filemodmanager.cpp
+		filemodmanager.cpp \
+		heartbeat.cpp
 QMAKE_TARGET  = ECM3401
 DESTDIR       = 
 TARGET        = ECM3401
@@ -415,8 +419,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h json.hpp localmanager.h statusmanager.h ui_mainwindow.h filemodmanager.h $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp localmanager.cpp main.cpp statusmanager.cpp filemodmanager.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h json.hpp localmanager.h statusmanager.h ui_mainwindow.h filemodmanager.h heartbeat.h $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp localmanager.cpp main.cpp statusmanager.cpp filemodmanager.cpp heartbeat.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -486,7 +490,8 @@ main.o: main.cpp daemon.h \
 		connection.h \
 		statusmanager.h \
 		filemanager.h \
-		filemodmanager.h
+		filemodmanager.h \
+		heartbeat.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 statusmanager.o: statusmanager.cpp statusmanager.h \
@@ -497,6 +502,12 @@ filemodmanager.o: filemodmanager.cpp filemodmanager.h \
 		json.hpp \
 		configmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemodmanager.o filemodmanager.cpp
+
+heartbeat.o: heartbeat.cpp heartbeat.h \
+		configmanager.h \
+		json.hpp \
+		localmanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o heartbeat.o heartbeat.cpp
 
 ####### Install
 

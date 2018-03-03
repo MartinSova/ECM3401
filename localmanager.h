@@ -12,16 +12,18 @@
 #include <vector>
 #include <algorithm>
 #include <typeinfo>
+#include <syslog.h>
 
 using namespace std;
 
-typedef vector<pair<int,int> > deviceIds;
+typedef vector<pair<int,int>> deviceIds;
 
 class LocalManager
 {
 public:
     static void printdev(libusb_device *dev);
-    static pair<deviceIds, deviceIds> availableDevices(libusb_context *ctx, libusb_device **devs);
+    static deviceIds availableRegisteredDevices();
+    static deviceIds availableNotRegisteredDevices();
     static void deviceAdded(libusb_device *dev, void *user_data);
     static void deviceRemoved(libusb_device *dev, void *user_data);
 };

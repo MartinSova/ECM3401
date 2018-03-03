@@ -16,7 +16,8 @@ HEADERS += configmanager.h \
            localmanager.h \
            statusmanager.h \
            ui_mainwindow.h \
-           filemodmanager.h
+           filemodmanager.h \
+    heartbeat.h
 
 FORMS += mainwindow.ui
 
@@ -27,4 +28,5 @@ SOURCES += configmanager.cpp \
            localmanager.cpp \
            main.cpp \
            statusmanager.cpp \
-           filemodmanager.cpp
+           filemodmanager.cpp \
+    heartbeat.cpp
