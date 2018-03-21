@@ -4,8 +4,7 @@ bool ConfigManager::isRegistered(pair<int,int> device)
 {
     if (!ifstream("configuration.json")) {
         // ERROR: no configuration file
-    }
-    else {
+    } else {
         ifstream i("configuration.json");
         json j;
         i >> j;
@@ -19,8 +18,7 @@ deviceIds ConfigManager::allRegisteredDeviceIds()
 {
     if (!ifstream("configuration.json")) {
             // ERROR: no configuration file
-        }
-    else {
+    } else {
         ifstream i("configuration.json");
         json j;
         i >> j;
@@ -36,8 +34,7 @@ vector<tuple<int, int, vector<string>>> ConfigManager::allRegisteredDevices()
 {
     if (!ifstream("configuration.json")) {
         // ERROR: no configuration file
-    }
-    else {
+    } else {
         ifstream i("configuration.json");
         json j;
         i >> j;
@@ -57,5 +54,44 @@ vector<tuple<int, int, vector<string>>> ConfigManager::allRegisteredDevices()
     }
 }
 
+/*
+A big stretch but I could actually design this software in such way
+that it always checks that the machine time under which it is saved
+is always correct (so may be updated) in terms of relevance to the GMT time
+-- but this might actually not be the better option.
+*/
+
+void ConfigManager::writeLastBackupDir(pair<string, string> dirPair)
+{
+    if (!ifstream("configuration.json")) {
+        // ERROR: no configuration file
+    } else {
+        ifstream i("configuration.json");
+        json j;
+        i >> j;
+        j["lastBackupDirName"] = {{"gmtTimeDirName", dirPair.first}, {"localTimeDirName", dirPair.second}};
+        ofstream o("configuration.json");
+        if (!ifstream("configuration.json")) {
+            syslog(LOG_ERR, "configuration.json could not be updated, function: writeLastBackupDir().");
+        } else {
+            o << setw(4) << j << endl;
+        }
+    }
+}
+/*
+pair<string, string> ConfigManager::readLastBackupDir()
+{
+    string lastBackupDirName = "";
+    if (!ifstream("configuration.json")) {
+        // ERROR: no configuration file
+    } else {
+        ifstream i("configuration.json");
+        json j;
+        i >> j;
+        lastBackupDirName = j["lastBackupDirPairs"].get<string>();
+    }
+    return lastBackupDirName;
+}
+*/
 
 

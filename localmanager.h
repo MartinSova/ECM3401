@@ -3,8 +3,8 @@
 #include "configmanager.h"
 #include <sys/statvfs.h>
 #include <stdio.h>
-#include<iostream>
-#include<libusb-1.0/libusb.h>
+#include <iostream>
+#include <libusb-1.0/libusb.h>
 #include <stdio.h>
 #include <dirent.h>
 #include <malloc.h>
@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <typeinfo>
 #include <syslog.h>
+#include <sstream>
+#include <time.h>
 
 using namespace std;
 
@@ -26,6 +28,7 @@ public:
     static deviceIds availableNotRegisteredDevices();
     static void deviceAdded(libusb_device *dev, void *user_data);
     static void deviceRemoved(libusb_device *dev, void *user_data);
+    static string currentLocalTime();
 };
 
 #endif // LOCALMANAGER_H

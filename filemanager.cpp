@@ -2,8 +2,7 @@
 
 void filemanager::existsConfigurationFile()
 {
-    if (ifstream("configuration.json"))
-    {
+    if (ifstream("configuration.json")) {
         syslog (LOG_INFO, "configuration.json already exists.");
     } else {
         // create and write json skeleton data to configuration json file
@@ -14,7 +13,7 @@ void filemanager::existsConfigurationFile()
         } else {
             // create json file
             json j;
-            j["registeredDevices"] = {{{"vendorId", 2385}, {"productId", 5675}, {"filesToOmit", {"path1", "path2"}}}, {{"vendorId", 2408124}, {"productId", 1212421}, {"filesToOmit", {"path3", "path4"}}}};
+            j["registeredDevices"] = {{{"vendorId", 2385}, {"productId", 5675}, {"filesToOmit", {"path1", "path2"}}, {"lastBackupDirName", ""}}, {{"vendorId", 2408124}, {"productId", 1212421}, {"filesToOmit", {"path3", "path4"}}, {"lastBackupDirName", ""}}};
             o << setw(4) << j << endl;
             syslog (LOG_INFO, "configuration.json created.");
         }
@@ -24,15 +23,13 @@ void filemanager::existsConfigurationFile()
 
 void filemanager::existsStatusFile()
 {
-    if (ifstream("status.json"))
-    {
+    if (ifstream("status.json")) {
          syslog (LOG_INFO, "status.json already exists.");
          //return false;
     } else {
         // create and write json skeleton data to status json file
         ofstream o("status.json");
-        if (!ifstream("status.json"))
-        {
+        if (!ifstream("status.json")) {
              syslog (LOG_ERR, "status.json could not be created.");
         } else {
             // create json file
@@ -47,6 +44,8 @@ void filemanager::existsStatusFile()
     }
 }
 
+/* I don't think this functon behaves the way I want to
+ * in terms of wiping certain data and keeping some e.g. watchDesc*/
 void filemanager::existsFileModFile()
 {
     json j;

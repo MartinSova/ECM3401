@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <tuple>
+#include <syslog.h>
 
 using namespace std;
 using json = nlohmann::json;
@@ -18,6 +19,8 @@ public:
     static bool isRegistered(pair<int,int> device);
     static vector<tuple<int, int, vector<string>>> allRegisteredDevices();
     static deviceIds allRegisteredDeviceIds();
+    static void writeLastBackupDir(pair<string, string> dirPair);
+    static pair<string, string> readLastBackupDir();
 };
 
 #endif // CONFIGMANAGER_H

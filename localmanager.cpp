@@ -1,5 +1,10 @@
 #include "localmanager.h"
 
+
+// Later change availableRegistedDevices and availableNotRegistedDevices
+// to utilize another method for all the code apart from returning
+// registered or not registed
+
 deviceIds LocalManager::availableRegisteredDevices()
 {
     // initiate usb library
@@ -19,12 +24,12 @@ deviceIds LocalManager::availableRegisteredDevices()
     if (count < 0) {
         cout<<"Get Device Error"<<endl; //there was an error
     }
-    cout<<count<<" Devices in list."<<endl; //print total number of usb devices
+
     ssize_t i; //for iterating through the list
 
     libusb_device_descriptor desc;
 
-    for(i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         //bool found = (std::find(my_list.begin(), my_list.end(), my_var) != my_list.end());
         //printdev(devs[i]); //print specs of this device
 
@@ -36,15 +41,10 @@ deviceIds LocalManager::availableRegisteredDevices()
 
         pair<int, int> pairTest = make_pair((int)desc.idVendor, (int)desc.idProduct);
 
-        if (ConfigManager::isRegistered(pairTest))
-        {
+        if (ConfigManager::isRegistered(pairTest)) {
             connectedRegistered.push_back(pairTest);
         }
-        cout << "VendorID: "<<(int)desc.idVendor<<"  ";
-        cout << "ProductID: "<<(int)desc.idProduct<<endl;
-        cout << endl;
     }
-    std::cout << "reg size: " << connectedRegistered.size() << '\n';
     return connectedRegistered;
 }
 
@@ -69,12 +69,12 @@ deviceIds LocalManager::availableNotRegisteredDevices()
     if (count < 0) {
         cout<<"Get Device Error"<<endl; //there was an error
     }
-    cout<<count<<" Devices in list."<<endl; //print total number of usb devices
+
     ssize_t i; //for iterating through the list
 
     libusb_device_descriptor desc;
 
-    for(i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         //bool found = (std::find(my_list.begin(), my_list.end(), my_var) != my_list.end());
         //printdev(devs[i]); //print specs of this device
 
@@ -90,12 +90,23 @@ deviceIds LocalManager::availableNotRegisteredDevices()
         {
             connectedNotRegistered.push_back(pairTest);
         }
-        cout << "VendorID: "<<(int)desc.idVendor<<"  ";
-        cout << "ProductID: "<<(int)desc.idProduct<<endl;
-        cout << endl;
     }
-    std::cout << "NOT reg size: " << connectedNotRegistered.size() << '\n';
     return connectedNotRegistered;
+}
+
+string LocalManager::currentLocalTime()
+{
+    time_t t = time(0);
+    tm *localTime = localtime(&t);
+    stringstream date;
+    date << 1900 + localTime->tm_year
+         << localTime->tm_mday
+         << localTime->tm_mon
+         << localTime->tm_hour
+         << localTime->tm_min
+         << localTime->tm_sec;
+    syslog(LOG_NOTICE, "%s time being returned from currentLocalTime", date.str().c_str());
+    return date.str();
 }
 
 

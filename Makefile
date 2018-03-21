@@ -506,7 +506,8 @@ filemodmanager.o: filemodmanager.cpp filemodmanager.h \
 heartbeat.o: heartbeat.cpp heartbeat.h \
 		configmanager.h \
 		json.hpp \
-		localmanager.h
+		localmanager.h \
+		filemodmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o heartbeat.o heartbeat.cpp
 
 ####### Install

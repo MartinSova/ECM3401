@@ -27,11 +27,15 @@
             "vendorId": 1452
         },
         {
+            "productId": 25479,
+            "vendorId": 1423
+        },
+        {
             "productId": 2,
             "vendorId": 7531
         }
     ],
-    "pid": 7396,
+    "pid": 6691,
     "registeredDevices": [
         {
             "lastBackup": 1,

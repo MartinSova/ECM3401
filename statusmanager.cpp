@@ -2,13 +2,11 @@
 
 void StatusManager::overwriteConnectedDevices(deviceIds devs, string type)
 {
-    if (!ifstream("status.json"))
-    {
+    if (!ifstream("status.json")) {
          cout << "Status file does not exist." << endl;
          // RUN STATUS EXISTS FROM FILEMANAGER?
          //return false;
     } else {
-
         // iterate over connected not registered devices and write to status file
         ifstream ifs("status.json");
         json j = json::parse(ifs);
@@ -24,13 +22,11 @@ void StatusManager::overwriteConnectedDevices(deviceIds devs, string type)
 
 void StatusManager::appendConnectedDevice(pair<int, int> dev, string type)
 {
-    if (!ifstream("status.json"))
-    {
+    if (!ifstream("status.json")) {
          cout << "Status file does not exist." << endl;
          // RUN STATUS EXISTS FROM FILEMANAGER?
          //return false;
     } else {
-
         // iterate over connected not registered devices and write to status file
         ifstream ifs("status.json");
         json j = json::parse(ifs);
@@ -45,13 +41,11 @@ void StatusManager::appendConnectedDevice(pair<int, int> dev, string type)
 
 void StatusManager::writePid(pid_t pid)
 {
-    if (!ifstream("status.json"))
-    {
+    if (!ifstream("status.json")) {
          cout << "Status file does not exist." << endl;
          // RUN STATUS EXISTS FROM FILEMANAGER?
          //return false;
     } else {
-
         // iterate over connected not registered devices and write to status file
         ifstream ifs("status.json");
         json j = json::parse(ifs);

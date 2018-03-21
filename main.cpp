@@ -83,8 +83,7 @@ static int daemon()
 
     /* Close all open file descriptors */
     int x;
-    for (x = sysconf(_SC_OPEN_MAX); x>=0; x--)
-    {
+    for (x = sysconf(_SC_OPEN_MAX); x>=0; x--) {
         close (x);
     }
 
@@ -125,14 +124,12 @@ int getdir(string rootDir, vector<string> &files)
     struct dirent *dp;
 
     //open the directory
-    if((dir  = opendir(rootDir.c_str())) == NULL)
-    {
+    if((dir  = opendir(rootDir.c_str())) == NULL) {
         cout << "Error(" << errno << ") opening " << rootDir << endl;
         return errno;
     }
 
-    while ((dp = readdir(dir)) != NULL)
-    {
+    while ((dp = readdir(dir)) != NULL) {
         files.push_back(string(dp->d_name));
 
 
@@ -140,15 +137,13 @@ int getdir(string rootDir, vector<string> &files)
 
         //if(file do something else)
     }
-
     closedir(dir);
     return 0;
 }
 
 bool containsPath(vector<path> pathVector, path p2)
 {
-    if (find(pathVector.begin(), pathVector.end(), p2) != pathVector.end())
-    {
+    if (find(pathVector.begin(), pathVector.end(), p2) != pathVector.end()) {
         return true;
     } else {
         return false;
@@ -157,11 +152,11 @@ bool containsPath(vector<path> pathVector, path p2)
 
 int main(int argc, char *argv[])
 {
+    syslog (LOG_NOTICE, "-------------------");
     // initiate method for before daemon starts
     initiate();
     // start daemon
     daemon();
-    syslog (LOG_NOTICE, "-------------------");
     syslog (LOG_NOTICE, "DAEMON STARTING ...");
 
     // initiate inotify
@@ -192,7 +187,7 @@ int main(int argc, char *argv[])
                 } else {
                     FileModManager::writeWatchDesc(wd[numDir], string(s));
                     //syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
-                    //syslog(LOG_NOTICE, "and pathname is");
+                    //syslog(LOG_NOTICE, "and pathname is %s", canonical(p).c_str());
                     numDir++;
                 }
             }
@@ -208,9 +203,13 @@ int main(int argc, char *argv[])
     }
 
     int count = 0;
+
+
+    heartbeat::prepareBackupDirectory();
+
     while (count < 4) {
         //FileModManager::update();
-        heartbeat::prepareBackupDirectory();
+
         syslog(LOG_NOTICE, "count: %d", count);
         vector<string> modifiedFiles;
         struct pollfd pfd = {fd, POLLIN, 0};
@@ -225,7 +224,6 @@ int main(int argc, char *argv[])
             len = read(fd, buf, sizeof(buf));
             i = 0;
             while (i < len) {
-                syslog(LOG_NOTICE, "%d", i);
                 struct inotify_event *ie = (struct inotify_event*) &buf[i];
                 if (ie->mask & IN_MODIFY) {
                     if ( ie->mask & IN_ISDIR ) {

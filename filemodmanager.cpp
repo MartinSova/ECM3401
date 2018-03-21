@@ -3,8 +3,7 @@
 
 void FileModManager::writeWatchDesc(int wd, string pathname)
 {   
-    if (!ifstream("filemod.json"))
-    {
+    if (!ifstream("filemod.json")) {
          cout << "File mod file does not exist." << endl;
          // RUN FILE MOD EXISTS FROM FILEMANAGER?
          //return false;
@@ -25,8 +24,7 @@ void FileModManager::writeModFiles(vector<string> sortedPathnames)
         syslog(LOG_NOTICE, "modified file is: %s", f.c_str());
     }
     */
-    if (!ifstream("filemod.json"))
-    {
+    if (!ifstream("filemod.json")) {
          cout << "File mod file does not exist." << endl;
          // RUN FILE MOD EXISTS FROM FILEMANAGER?
          //return false;
@@ -81,8 +79,7 @@ void FileModManager::clearDuplicates()
 vector<pair<int,string>> FileModManager::readAllWatchDesc()
 {
     vector<pair<int,string>> allWatchDesc;
-    if (!ifstream("filemod.json"))
-    {
+    if (!ifstream("filemod.json")) {
          cout << "File mod file does not exist." << endl;
          // RUN FILE MOD EXISTS FROM FILEMANAGER?
          //return false;
@@ -100,8 +97,6 @@ vector<pair<int,string>> FileModManager::readAllWatchDesc()
 vector<string> FileModManager::readAllModFiles()
 {
     vector<string> allModFiles;
-    syslog (LOG_INFO, "in read all mod files");
-
     ifstream i("filemod.json");
     json j;
     i >> j;
