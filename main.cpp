@@ -29,6 +29,7 @@
 #include <time.h>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
+// target volume must be format HPFS/NTFS or ____ (any other viable types?)
 
 using namespace std;
 using namespace boost::filesystem;
@@ -152,7 +153,7 @@ bool containsPath(vector<path> pathVector, path p2)
 
 int main(int argc, char *argv[])
 {
-    syslog (LOG_NOTICE, "-------------------");
+    syslog (LOG_NOTICE, "-----------------------------------------");
     // initiate method for before daemon starts
     initiate();
     // start daemon
@@ -176,14 +177,15 @@ int main(int argc, char *argv[])
     }
     */
     // add watch to all current directories
+    string rootDirectory = "/home/martin/Desktop/";
     filemanager::existsFileModFile();
-    for(auto& p: recursive_directory_iterator("/home/martin/ECM3401")) {
+    for(auto& p: recursive_directory_iterator(rootDirectory)) {
         try {
             if (is_directory(p)) {
                 const char *s = p.path().c_str();
-                //syslog(LOG_NOTICE, "%s", s);
+                syslog(LOG_NOTICE, "%s", s);
                 if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE)) < 0) {
-                    syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
+                    //syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
                 } else {
                     FileModManager::writeWatchDesc(wd[numDir], string(s));
                     //syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
@@ -205,11 +207,10 @@ int main(int argc, char *argv[])
     int count = 0;
 
 
-    heartbeat::prepareBackupDirectory();
 
-    while (count < 4) {
+    while (count < 3) {
         //FileModManager::update();
-
+        heartbeat::prepareBackupDirectory(rootDirectory);
         syslog(LOG_NOTICE, "count: %d", count);
         vector<string> modifiedFiles;
         struct pollfd pfd = {fd, POLLIN, 0};
@@ -227,9 +228,9 @@ int main(int argc, char *argv[])
                 struct inotify_event *ie = (struct inotify_event*) &buf[i];
                 if (ie->mask & IN_MODIFY) {
                     if ( ie->mask & IN_ISDIR ) {
-                        //syslog(LOG_NOTICE, "directory was modified");
+                        syslog(LOG_NOTICE, "directory was modified");
                     } else {
-                        //syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
+                        syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
                         for(const auto& wd : currentWatchDesc)
                         {
                             if (wd.first == ie->wd) {
@@ -242,6 +243,7 @@ int main(int argc, char *argv[])
                 }
                 i += sizeof(struct inotify_event) + ie->len;
             }
+        // create backup
         }
         if (!modifiedFiles.empty()) {
             sort(modifiedFiles.begin(), modifiedFiles.end(), greater<string>());

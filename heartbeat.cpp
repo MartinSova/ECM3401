@@ -1,9 +1,9 @@
 #include "heartbeat.h"
 
-/*
-*/
-void heartbeat::prepareBackupDirectory()
-{
+
+void heartbeat::prepareBackupDirectory(string rootDirectory)
+{ 
+
     /*
     const char dir_path[] = "c:\\home\\martin\\Documents\\newdir";
 
@@ -54,28 +54,25 @@ void heartbeat::prepareBackupDirectory()
     string devicePath = "/media/martin/DISK_IMG/DISSERTATION/";
 
     // still make method to get last backup directory name
-    string lastBackupDirName = "hardcopy"; // getLastBackupDirName();
+    string lastBackupDirName = "hardCopy"; // getLastBackupDirName();
 
-    string newDirName = "testhardlink3"; //getNewDirName();
+    string newDirName = getNewDirName();
+    // LocalManager::writeLastBackupDirName(gmtTime, machineTime);
+
 
     //create_directories(devicePath + newDirName);
 
     //create_directories(devicePath + newDirName + "/home/martin/ECM3401");
 
-    //createHardCopy("/home/martin/ECM3401", "/media/martin/DISK_IMG/DISSERTATION/" + lastBackupDirName);
-    hardlinkLastBackup(devicePath + lastBackupDirName, devicePath + newDirName);
-    /*
+
     if (!exists(devicePath) || lastBackupDirName.empty()) {
-        if(!create_directories(devicePath + "/" + newDirName)) {
-            syslog(LOG_ERR, "%s directory path could not be created.", devicePath.c_str());
-        } else {
-            createHardCopy(devicePath + "/" + newDirName);
-            syslog(LOG_NOTICE, "dissertation directory created");
-        }
+        syslog(LOG_NOTICE, "before creating hard copy");
+        createHardCopy(rootDirectory, devicePath + newDirName);
     } else {
-        syslog(LOG_NOTICE, "dissertation directory already exists");
+        hardlinkLastBackup(rootDirectory, devicePath, devicePath + lastBackupDirName, devicePath + newDirName);
     }
-    */
+
+
     /*
     string newDirName = getNewDirName();
     ConfigManager::writeLastBackupDir(newDirName);
@@ -120,9 +117,6 @@ void heartbeat::copyTreeStructure() {
 */
 
 void heartbeat::createHardCopy(const path &src, const path &dst) {
-    if (exists(dst)) {
-        throw runtime_error(dst.generic_string() + " exists");
-    }
     if (is_directory(src)) {
         create_directories(dst);
         for (directory_entry& item : directory_iterator(src)) {
@@ -155,23 +149,43 @@ void heartbeat::createHardCopy(const path &src, const path &dst) {
     */
 }
 
-void heartbeat::hardlinkLastBackup(const path &src, const path &dst) {
+void heartbeat::hardlinkLastBackup(const path &rootDirectory, const path &devicePath, const path &src, const path &dst) {
+
+
+    //syslog(LOG_NOTICE, "source path for copy: %s", src.c_str());
+    //syslog(LOG_NOTICE, "destination path for copy: %s", dst.c_str());
+
     if (exists(dst)) {
         throw runtime_error(dst.generic_string() + " exists");
     }
     if (is_directory(src)) {
         create_directories(dst);
         for (directory_entry& item : directory_iterator(src)) {
-            hardlinkLastBackup(item.path(), dst/item.path().filename());
+            hardlinkLastBackup(rootDirectory, devicePath, item.path(), dst/item.path().filename());
         }
     } else if (is_regular_file(src)) {
-        syslog(LOG_NOTICE, "creating hardlink is: %s", dst.c_str());
-        //copy(src, dst);
+        //syslog(LOG_NOTICE, "creating hardlink is: %s", dst.c_str());
         create_hard_link(src, dst);
-        //link(src.c_str(), dst.c_str());
     } else {
         throw runtime_error(dst.generic_string() + " not dir or file");
     }
+
+    vector<string> modifiedFilePaths = FileModManager::readAllModFiles();
+
+    //int count = 0;
+
+    for (auto &path : modifiedFilePaths) {
+
+        //string withoutRoot = path.substr(rootDirectory.string().length(), path.length());
+        //string destinationPath = dst.string() + withoutRoot;
+
+        if (exists(path) && exists(destinationPath)) {
+            remove(destinationPath);
+            copy(path, destinationPath);
+        }
+
+    }
+    syslog(LOG_NOTICE, "COUNT was: %d", count);
 }
 
 

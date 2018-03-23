@@ -18,10 +18,10 @@ using namespace boost::system;
 class heartbeat
 {
 public:
-    static void prepareBackupDirectory();
     static void backupModFiles(vector<string> allModifiedFiles);
     static string getNewDirName();
-    static void hardlinkLastBackup(const path &src, const path &dst);
+    static void hardlinkLastBackup(const path &rootDirectory, const path &devicePath, const path &src, const path &dst);
+    static void prepareBackupDirectory(string rootDirectory);
     static void createHardCopy(const path &src, const path &dst);
 };
 

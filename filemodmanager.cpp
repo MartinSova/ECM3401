@@ -100,11 +100,9 @@ vector<string> FileModManager::readAllModFiles()
     ifstream i("filemod.json");
     json j;
     i >> j;
-    for ( auto &device : j["modFiles"].get<json>() ) {
-        for ( auto &file : device["modFilesToBackup"].get<json>() ) {
-            allModFiles.push_back(file.get<string>());
-            //syslog (LOG_INFO, "pushing back file: ");
-        }
+    for (auto &path : j["modFiles"].get<json>()) {
+        allModFiles.push_back(path.get<string>());
+        //syslog (LOG_INFO, "pushing back file: ");
     }
     return allModFiles;
 }
@@ -167,5 +165,3 @@ void FileModManager::update()
         }
     }
 }
-
-

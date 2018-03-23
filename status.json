@@ -11,10 +11,6 @@
     ],
     "notRegisteredDevices": [
         {
-            "productId": 33798,
-            "vendorId": 1452
-        },
-        {
             "productId": 3,
             "vendorId": 7531
         },
@@ -35,7 +31,7 @@
             "vendorId": 7531
         }
     ],
-    "pid": 6691,
+    "pid": 4536,
     "registeredDevices": [
         {
             "lastBackup": 1,
