@@ -1,2 +1,2 @@
 # ECM3401
-dissertation project
+Refer to Report.pdf for thorough documentation.
