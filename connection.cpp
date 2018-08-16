@@ -47,7 +47,7 @@ Connection::Connection()
 
     while (1) libusb_handle_events (NULL);
 
-    libusb_exit(ctx); //close the session
+    libusb_exit(ctx); //close session
 
 
 
