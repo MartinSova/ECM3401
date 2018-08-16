@@ -19,6 +19,9 @@ void FileModManager::writeWatchDesc(int wd, string pathname)
 
 void FileModManager::writeModFiles(vector<string> sortedPathnames)
 {
+    sort(sortedPathnames.begin(), sortedPathnames.end(), greater<string>());
+    sortedPathnames.erase(unique(sortedPathnames.begin(), sortedPathnames.end()), sortedPathnames.end());
+
     /*
     for (auto &f : pathnames) {
         syslog(LOG_NOTICE, "modified file is: %s", f.c_str());
@@ -67,11 +70,6 @@ void FileModManager::writeModFiles(vector<string> sortedPathnames)
         ofstream o("filemod.json");
         o << setw(4) << k << endl;
     }
-}
-
-void FileModManager::clearDuplicates()
-{
-
 }
 
 //add a delete method for when a directory is deleted
@@ -157,6 +155,7 @@ void FileModManager::update()
         for (auto &device : j["modFiles"].get<json>())
             device["modFilesToBackup"] = {};
         */
+        j["modFiles"]= {};
         ofstream o("filemod.json");
         if (!ifstream("filemod.json")) {
             syslog (LOG_ERR, "filemod.json could not be created.");

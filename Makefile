@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -std=gnu++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -I../anaconda3/include/qt -I../anaconda3/include/qt/QtGui -I../anaconda3/include/qt/QtCore -I. -I../anaconda3/mkspecs/linux-g++
 QMAKE         = /home/martin/anaconda3/bin/qmake
 DEL_FILE      = rm -f
@@ -52,20 +52,25 @@ SOURCES       = configmanager.cpp \
 		connection.cpp \
 		daemon.cpp \
 		filemanager.cpp \
+		filemodmanager.cpp \
+		heartbeat.cpp \
 		localmanager.cpp \
 		main.cpp \
+		mainwindow.cpp \
 		statusmanager.cpp \
-		filemodmanager.cpp \
-		heartbeat.cpp 
+		registereddevice.cpp moc_mainwindow.cpp
 OBJECTS       = configmanager.o \
 		connection.o \
 		daemon.o \
 		filemanager.o \
+		filemodmanager.o \
+		heartbeat.o \
 		localmanager.o \
 		main.o \
+		mainwindow.o \
 		statusmanager.o \
-		filemodmanager.o \
-		heartbeat.o
+		registereddevice.o \
+		moc_mainwindow.o
 DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		../anaconda3/mkspecs/common/unix.conf \
 		../anaconda3/mkspecs/common/linux.conf \
@@ -171,20 +176,24 @@ DIST          = ../anaconda3/mkspecs/features/spec_pre.prf \
 		connection.h \
 		daemon.h \
 		filemanager.h \
+		filemodmanager.h \
+		heartbeat.h \
 		json.hpp \
 		localmanager.h \
+		mainwindow.h \
 		statusmanager.h \
 		ui_mainwindow.h \
-		filemodmanager.h \
-		heartbeat.h configmanager.cpp \
+		registereddevice.h configmanager.cpp \
 		connection.cpp \
 		daemon.cpp \
 		filemanager.cpp \
+		filemodmanager.cpp \
+		heartbeat.cpp \
 		localmanager.cpp \
 		main.cpp \
+		mainwindow.cpp \
 		statusmanager.cpp \
-		filemodmanager.cpp \
-		heartbeat.cpp
+		registereddevice.cpp
 QMAKE_TARGET  = ECM3401
 DESTDIR       = 
 TARGET        = ECM3401
@@ -419,8 +428,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h json.hpp localmanager.h statusmanager.h ui_mainwindow.h filemodmanager.h heartbeat.h $(DISTDIR)/
-	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp localmanager.cpp main.cpp statusmanager.cpp filemodmanager.cpp heartbeat.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.h connection.h daemon.h filemanager.h filemodmanager.h heartbeat.h json.hpp localmanager.h mainwindow.h statusmanager.h ui_mainwindow.h registereddevice.h $(DISTDIR)/
+	$(COPY_FILE) --parents configmanager.cpp connection.cpp daemon.cpp filemanager.cpp filemodmanager.cpp heartbeat.cpp localmanager.cpp main.cpp mainwindow.cpp statusmanager.cpp registereddevice.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -445,8 +454,12 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_mainwindow.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_mainwindow.cpp
+moc_mainwindow.cpp: mainwindow.h
+	/home/martin/anaconda3/bin/moc $(DEFINES) -I/home/martin/anaconda3/mkspecs/linux-g++ -I/home/martin/ECM3401 -I/home/martin/ECM3401 -I/home/martin/anaconda3/include/qt -I/home/martin/anaconda3/include/qt/QtGui -I/home/martin/anaconda3/include/qt/QtCore -I/home/martin/anaconda3/x86_64-conda_cos6-linux-gnu/include/c++/7.2.0 -I/home/martin/anaconda3/x86_64-conda_cos6-linux-gnu/include/c++/7.2.0/x86_64-conda_cos6-linux-gnu -I/home/martin/anaconda3/x86_64-conda_cos6-linux-gnu/include/c++/7.2.0/backward -I/home/martin/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.2.0/include -I/home/martin/anaconda3/lib/gcc/x86_64-conda_cos6-linux-gnu/7.2.0/include-fixed -I/home/martin/anaconda3/x86_64-conda_cos6-linux-gnu/include -I/home/martin/anaconda3/x86_64-conda_cos6-linux-gnu/sysroot/usr/include mainwindow.h -o moc_mainwindow.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_yacc_decl_make_all:
@@ -455,7 +468,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: 
+compiler_clean: compiler_moc_header_clean 
 
 ####### Compile
 
@@ -478,6 +491,18 @@ filemanager.o: filemanager.cpp filemanager.h \
 		configmanager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemanager.o filemanager.cpp
 
+filemodmanager.o: filemodmanager.cpp filemodmanager.h \
+		json.hpp \
+		configmanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemodmanager.o filemodmanager.cpp
+
+heartbeat.o: heartbeat.cpp heartbeat.h \
+		configmanager.h \
+		json.hpp \
+		localmanager.h \
+		filemodmanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o heartbeat.o heartbeat.cpp
+
 localmanager.o: localmanager.cpp localmanager.h \
 		configmanager.h \
 		json.hpp
@@ -494,21 +519,86 @@ main.o: main.cpp daemon.h \
 		heartbeat.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
+mainwindow.o: mainwindow.cpp mainwindow.h \
+		ui_mainwindow.h \
+		../anaconda3/include/qt/QtCore/QVariant \
+		../anaconda3/include/qt/QtCore/qvariant.h \
+		../anaconda3/include/qt/QtCore/qatomic.h \
+		../anaconda3/include/qt/QtCore/qglobal.h \
+		../anaconda3/include/qt/QtCore/qconfig.h \
+		../anaconda3/include/qt/QtCore/qfeatures.h \
+		../anaconda3/include/qt/QtCore/qsystemdetection.h \
+		../anaconda3/include/qt/QtCore/qprocessordetection.h \
+		../anaconda3/include/qt/QtCore/qcompilerdetection.h \
+		../anaconda3/include/qt/QtCore/qtypeinfo.h \
+		../anaconda3/include/qt/QtCore/qtypetraits.h \
+		../anaconda3/include/qt/QtCore/qisenum.h \
+		../anaconda3/include/qt/QtCore/qsysinfo.h \
+		../anaconda3/include/qt/QtCore/qlogging.h \
+		../anaconda3/include/qt/QtCore/qflags.h \
+		../anaconda3/include/qt/QtCore/qglobalstatic.h \
+		../anaconda3/include/qt/QtCore/qmutex.h \
+		../anaconda3/include/qt/QtCore/qnumeric.h \
+		../anaconda3/include/qt/QtCore/qversiontagging.h \
+		../anaconda3/include/qt/QtCore/qbasicatomic.h \
+		../anaconda3/include/qt/QtCore/qatomic_bootstrap.h \
+		../anaconda3/include/qt/QtCore/qgenericatomic.h \
+		../anaconda3/include/qt/QtCore/qatomic_cxx11.h \
+		../anaconda3/include/qt/QtCore/qatomic_gcc.h \
+		../anaconda3/include/qt/QtCore/qatomic_msvc.h \
+		../anaconda3/include/qt/QtCore/qatomic_armv7.h \
+		../anaconda3/include/qt/QtCore/qatomic_armv6.h \
+		../anaconda3/include/qt/QtCore/qatomic_armv5.h \
+		../anaconda3/include/qt/QtCore/qatomic_ia64.h \
+		../anaconda3/include/qt/QtCore/qatomic_x86.h \
+		../anaconda3/include/qt/QtCore/qatomic_unix.h \
+		../anaconda3/include/qt/QtCore/qbytearray.h \
+		../anaconda3/include/qt/QtCore/qrefcount.h \
+		../anaconda3/include/qt/QtCore/qnamespace.h \
+		../anaconda3/include/qt/QtCore/qarraydata.h \
+		../anaconda3/include/qt/QtCore/qstring.h \
+		../anaconda3/include/qt/QtCore/qchar.h \
+		../anaconda3/include/qt/QtCore/qstringbuilder.h \
+		../anaconda3/include/qt/QtCore/qlist.h \
+		../anaconda3/include/qt/QtCore/qalgorithms.h \
+		../anaconda3/include/qt/QtCore/qiterator.h \
+		../anaconda3/include/qt/QtCore/qhashfunctions.h \
+		../anaconda3/include/qt/QtCore/qpair.h \
+		../anaconda3/include/qt/QtCore/qbytearraylist.h \
+		../anaconda3/include/qt/QtCore/qstringlist.h \
+		../anaconda3/include/qt/QtCore/qregexp.h \
+		../anaconda3/include/qt/QtCore/qstringmatcher.h \
+		../anaconda3/include/qt/QtCore/qmetatype.h \
+		../anaconda3/include/qt/QtCore/qvarlengtharray.h \
+		../anaconda3/include/qt/QtCore/qcontainerfwd.h \
+		../anaconda3/include/qt/QtCore/qobjectdefs.h \
+		../anaconda3/include/qt/QtCore/qobjectdefs_impl.h \
+		../anaconda3/include/qt/QtCore/qmap.h \
+		../anaconda3/include/qt/QtCore/qdebug.h \
+		../anaconda3/include/qt/QtCore/qhash.h \
+		../anaconda3/include/qt/QtCore/qtextstream.h \
+		../anaconda3/include/qt/QtCore/qiodevice.h \
+		../anaconda3/include/qt/QtCore/qobject.h \
+		../anaconda3/include/qt/QtCore/qcoreevent.h \
+		../anaconda3/include/qt/QtCore/qscopedpointer.h \
+		../anaconda3/include/qt/QtCore/qobject_impl.h \
+		../anaconda3/include/qt/QtCore/qlocale.h \
+		../anaconda3/include/qt/QtCore/qshareddata.h \
+		../anaconda3/include/qt/QtCore/qvector.h \
+		../anaconda3/include/qt/QtCore/qpoint.h \
+		../anaconda3/include/qt/QtCore/qset.h \
+		../anaconda3/include/qt/QtCore/qcontiguouscache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
+
 statusmanager.o: statusmanager.cpp statusmanager.h \
 		json.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o statusmanager.o statusmanager.cpp
 
-filemodmanager.o: filemodmanager.cpp filemodmanager.h \
-		json.hpp \
-		configmanager.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filemodmanager.o filemodmanager.cpp
+registereddevice.o: registereddevice.cpp registereddevice.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o registereddevice.o registereddevice.cpp
 
-heartbeat.o: heartbeat.cpp heartbeat.h \
-		configmanager.h \
-		json.hpp \
-		localmanager.h \
-		filemodmanager.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o heartbeat.o heartbeat.cpp
+moc_mainwindow.o: moc_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
 ####### Install
 

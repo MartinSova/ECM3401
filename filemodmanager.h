@@ -20,7 +20,6 @@ public:
     static void update();
     static void writeModFiles(vector<string> sortedPathnames);
     static vector<string> readAllModFiles();
-    static void clearDuplicates();
 };
 
 #endif // FILEMODMANAGER_H

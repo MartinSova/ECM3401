@@ -27,9 +27,12 @@
 #include <pwd.h>
 #include <poll.h>
 #include <time.h>
+#include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
 // target volume must be format HPFS/NTFS or ____ (any other viable types?)
+//#include "mainwindow.h"
+// #include <QApplication>
 
 using namespace std;
 using namespace boost::filesystem;
@@ -153,12 +156,16 @@ bool containsPath(vector<path> pathVector, path p2)
 
 int main(int argc, char *argv[])
 {
+    //QApplication a(argc, argv);
+    //MainWindow w;
+    //w.show();
+
     syslog (LOG_NOTICE, "-----------------------------------------");
     // initiate method for before daemon starts
     initiate();
     // start daemon
     daemon();
-    syslog (LOG_NOTICE, "DAEMON STARTING ...");
+    syslog(LOG_NOTICE, "DAEMON STARTING ...");
 
     // initiate inotify
     int fd;
@@ -177,14 +184,17 @@ int main(int argc, char *argv[])
     }
     */
     // add watch to all current directories
-    string rootDirectory = "/home/martin/Desktop/";
+
+
+    string rootDirectory = "/home/martin/Desktop/Tests/";
     filemanager::existsFileModFile();
+
     for(auto& p: recursive_directory_iterator(rootDirectory)) {
         try {
             if (is_directory(p)) {
                 const char *s = p.path().c_str();
                 syslog(LOG_NOTICE, "%s", s);
-                if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE)) < 0) {
+                if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE | IN_CREATE | IN_ATTRIB)) < 0) {
                     //syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
                 } else {
                     FileModManager::writeWatchDesc(wd[numDir], string(s));
@@ -205,12 +215,16 @@ int main(int argc, char *argv[])
     }
 
     int count = 0;
+    string toRemove1;
+    string toRemove2;
+    string devicePath = "/media/martin/DISK_IMG/DISSERTATION/";
+    int backupFrequency;
 
 
+    while (count < 12) {
 
-    while (count < 3) {
-        //FileModManager::update();
-        heartbeat::prepareBackupDirectory(rootDirectory);
+        FileModManager::update();
+
         syslog(LOG_NOTICE, "count: %d", count);
         vector<string> modifiedFiles;
         struct pollfd pfd = {fd, POLLIN, 0};
@@ -218,7 +232,7 @@ int main(int argc, char *argv[])
         if (ret < 0) {
             fprintf(stderr, "poll failed: %s\n", strerror(errno));
         } else if (ret == 0) {
-            // Timeout with no events, move on.
+           // Timeout with no events, move on.
         } else {
             wakeup();
             vector<pair<int,string>> currentWatchDesc = FileModManager::readAllWatchDesc();
@@ -226,34 +240,102 @@ int main(int argc, char *argv[])
             i = 0;
             while (i < len) {
                 struct inotify_event *ie = (struct inotify_event*) &buf[i];
-                if (ie->mask & IN_MODIFY) {
-                    if ( ie->mask & IN_ISDIR ) {
-                        syslog(LOG_NOTICE, "directory was modified");
-                    } else {
-                        syslog(LOG_NOTICE, "%s file was modified\n", ie->name);
-                        for(const auto& wd : currentWatchDesc)
-                        {
-                            if (wd.first == ie->wd) {
-                                string toWrite = (wd.second + "/" + ie->name);
-                                modifiedFiles.push_back(toWrite);
-                                break;
-                            }
+                if (ie->mask & IN_MODIFY | ie->mask & IN_CREATE | ie->mask & IN_DELETE | ie->mask & IN_ATTRIB) {
+                    string toWrite;
+                    for(const auto& wd : currentWatchDesc)
+                    {
+                        if (wd.first == ie->wd) {
+                            toWrite = (wd.second + "/" + ie->name);
+                            modifiedFiles.push_back(toWrite);
+                            break;
                         }
+                    }
+                    syslog(LOG_NOTICE, "%s file was modified\n", toWrite.c_str());
+
+                    if ( ie->mask & IN_ISDIR ) {
+                        string p = toWrite;
+                        syslog(LOG_NOTICE, "%s directory was modified", p.c_str());
+
+                        try {
+                            if (is_directory(p)) {
+                                const char *s = p.c_str();
+                                syslog(LOG_NOTICE, "%s watch added", s);
+                                if ((wd[numDir] = inotify_add_watch (fd, s, IN_MODIFY | IN_DELETE | IN_CREATE)) < 0) {
+                                    //syslog(LOG_ERR, "failed to add inotify watch for '%s'", s);
+                                } else {
+                                    FileModManager::writeWatchDesc(wd[numDir], string(s));
+                                    //syslog(LOG_NOTICE, "wd int is: %d'", wd[numDir]);
+                                    //syslog(LOG_NOTICE, "and pathname is %s", canonical(p).c_str());
+                                    numDir++;
+                                }
+                            }
+                        } catch(const filesystem_error& e) {
+                            if(e.code() == errc::permission_denied) {
+                               std::cout << "Search permission is denied for one of the directories "
+                                         << "in the path prefix of " << p << "\n";
+                           } else {
+                               std::cout << "is_directory(" << p << ") failed with "
+                                         << e.code().message() << '\n';
+                           }
+                        }
+
                     }
                 }
                 i += sizeof(struct inotify_event) + ie->len;
             }
         // create backup
         }
+
         if (!modifiedFiles.empty()) {
-            sort(modifiedFiles.begin(), modifiedFiles.end(), greater<string>());
-            modifiedFiles.erase(unique(modifiedFiles.begin(), modifiedFiles.end()), modifiedFiles.end());
             FileModManager::writeModFiles(modifiedFiles);
-            FileModManager::clearDuplicates();
+        }
+        /*
+        deviceIds registeredDeviceIds = ConfigManager::allRegisteredDeviceIds();
+        deviceIds availableRegisteredDevices = LocalManager::availableRegisteredDevices();
+
+        for (pair<int, int> dev : registeredDeviceIds) {
+            //syslog(LOG_NOTICE, "dev VID is %i", dev.first);
+            //syslog(LOG_NOTICE, "dev Pid is %i", dev.second);
+            if(find(availableRegisteredDevices.begin(), availableRegisteredDevices.end(), dev) != availableRegisteredDevices.end()) {
+                // convert dec to hex
+                string hexVID = LocalManager::getHexadecimalValue(dev.first);
+                string hexPID = LocalManager::getHexadecimalValue(dev.second);
+                LocalManager::getPathToMountedDevices(hexVID, hexPID);
+                syslog(LOG_NOTICE, "hex val of available device vendor id is %s", hexVID.c_str());
+                syslog(LOG_NOTICE, "hex val of available device product id is %s", hexPID.c_str());
+            } else {
+
+            }
+        }
+        */
+        //for (pair<int, int> avDev : availableRegisteredDevices) syslog(LOG_NOTICE, "available device vendor id is %i", avDev.first);
+
+        //for (pair<int, int> avDev : availableRegisteredDevices) syslog(LOG_NOTICE, "available device product id is %i", avDev.second);
+        syslog(LOG_NOTICE, "before prepare backup directory");
+
+
+        heartbeat::prepareBackupDirectory(); // does it actually make sense to write to json is passed straight away?
+
+        if (count == 9) {
+                toRemove1 = devicePath + ConfigManager::readLastBackupDir();
+        }
+        if (count == 11) {
+                toRemove2 = devicePath + ConfigManager::readLastBackupDir();
+                syslog(LOG_NOTICE, "%s to remove1", toRemove1.c_str());
+                syslog(LOG_NOTICE, "%s to remove2", toRemove2.c_str());
+                remove_all(toRemove1);
+                remove_all(toRemove2);
+
+
         }
         count++;
-        sleep(10);
+        ifstream backup("/home/martin/build-ECM3401-Desktop_Qt_5_7_0_GCC_64bit-Debug/backupFrequency");
+        std::string content( (std::istreambuf_iterator<char>(backup) ),
+                               (std::istreambuf_iterator<char>()    ) );
+        backupFrequency = stoi(content.c_str());
+        sleep(backupFrequency);
     }
+
     syslog (LOG_NOTICE, "EXITING ...");
     exit(0);
     //error(EXIT_FAILURE, len == 0 ? 0 : errno, "failed to read inotify event");

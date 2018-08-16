@@ -1,15 +1,21 @@
 {
-    "modFiles": [
-        "/home/martin/Desktop/tests/.goutputstream-L31MGZ"
-    ],
+    "modFiles": null,
     "watchDesc": [
         {
-            "path": "/home/martin/Desktop/.ipynb_checkpoints",
+            "path": "/home/martin/Desktop/Tests/ROOT",
             "wdInt": 1
         },
         {
-            "path": "/home/martin/Desktop/tests",
+            "path": "/home/martin/Desktop/Tests/ROOT/RESOURCES",
             "wdInt": 2
+        },
+        {
+            "path": "/home/martin/Desktop/Tests/ROOT/Family_Photos",
+            "wdInt": 3
+        },
+        {
+            "path": "/home/martin/Desktop/Tests/ROOT/hell",
+            "wdInt": 4
         }
     ]
 }

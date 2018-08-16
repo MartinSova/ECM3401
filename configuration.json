@@ -1,4 +1,5 @@
 {
+    "lastBackupDirName": "201855212111",
     "registeredDevices": [
         {
             "filesToOmit": [
@@ -6,6 +7,7 @@
                 "path2"
             ],
             "lastBackupDirName": "",
+            "lastBackupTime": 2,
             "productId": 5675,
             "vendorId": 2385
         },
@@ -15,6 +17,7 @@
                 "path4"
             ],
             "lastBackupDirName": "",
+            "lastBackupTime": 3,
             "productId": 1212421,
             "vendorId": 2408124
         }

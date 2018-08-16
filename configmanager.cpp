@@ -1,5 +1,32 @@
 #include "configmanager.h"
 
+// find if there exist external methods/libraries that convert json objects into C++ objects
+vector<RegisteredDevice> ConfigManager::registeredDevices()
+{
+    if (!ifstream("configuration.json")) {
+        // ERROR: no configuration file
+    } else {
+        ifstream i("configuration.json");
+        json j;
+        i >> j;
+        vector<RegisteredDevice> registeredDevices;
+        for ( auto &device : j["registeredDevices"].get<json>() ) {
+            struct RegisteredDevice registeredDevice;
+            registeredDevice.vendorId = device["vendorId"].get<int>();
+            registeredDevice.productId = device["productId"].get<int>();
+            vector<string> filesToOmit;
+            for ( auto &f : device["filesToOmit"].get<json>()) {
+                filesToOmit.push_back(f.get<string>().c_str());
+            }
+            registeredDevice.filesToOmit = filesToOmit;
+            registeredDevice.lastBackupDirName = device["lastBackupDirName"].get<string>().c_str();
+            registeredDevice.lastBackupTime = device["lastBackupTime"].get<int>();
+            registeredDevices.push_back(registeredDevice);
+        }
+        return registeredDevices;
+    }
+}
+
 bool ConfigManager::isRegistered(pair<int,int> device)
 {
     if (!ifstream("configuration.json")) {
@@ -61,7 +88,7 @@ is always correct (so may be updated) in terms of relevance to the GMT time
 -- but this might actually not be the better option.
 */
 
-void ConfigManager::writeLastBackupDir(pair<string, string> dirPair)
+void ConfigManager::writeLastBackupDir(string dir)
 {
     if (!ifstream("configuration.json")) {
         // ERROR: no configuration file
@@ -69,7 +96,7 @@ void ConfigManager::writeLastBackupDir(pair<string, string> dirPair)
         ifstream i("configuration.json");
         json j;
         i >> j;
-        j["lastBackupDirName"] = {{"gmtTimeDirName", dirPair.first}, {"localTimeDirName", dirPair.second}};
+        j["lastBackupDirName"] = dir;
         ofstream o("configuration.json");
         if (!ifstream("configuration.json")) {
             syslog(LOG_ERR, "configuration.json could not be updated, function: writeLastBackupDir().");
@@ -78,8 +105,8 @@ void ConfigManager::writeLastBackupDir(pair<string, string> dirPair)
         }
     }
 }
-/*
-pair<string, string> ConfigManager::readLastBackupDir()
+
+string ConfigManager::readLastBackupDir()
 {
     string lastBackupDirName = "";
     if (!ifstream("configuration.json")) {
@@ -88,10 +115,10 @@ pair<string, string> ConfigManager::readLastBackupDir()
         ifstream i("configuration.json");
         json j;
         i >> j;
-        lastBackupDirName = j["lastBackupDirPairs"].get<string>();
+        lastBackupDirName = j["lastBackupDirName"].get<string>();
     }
     return lastBackupDirName;
 }
-*/
+
 
 

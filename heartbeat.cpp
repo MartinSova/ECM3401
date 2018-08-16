@@ -1,9 +1,9 @@
 #include "heartbeat.h"
 
 
-void heartbeat::prepareBackupDirectory(string rootDirectory)
+void heartbeat::prepareBackupDirectory()
 { 
-
+    syslog(LOG_NOTICE, "inside prepare backup directory");
     /*
     const char dir_path[] = "c:\\home\\martin\\Documents\\newdir";
 
@@ -52,11 +52,12 @@ void heartbeat::prepareBackupDirectory(string rootDirectory)
 
     // make method to get device path
     string devicePath = "/media/martin/DISK_IMG/DISSERTATION/";
-
+    string rootDirectory = "/home/martin/Desktop/Tests";
     // still make method to get last backup directory name
-    string lastBackupDirName = "hardCopy"; // getLastBackupDirName();
+    string lastBackupDirName = ConfigManager::readLastBackupDir(); // getLastBackupDirName();
 
     string newDirName = getNewDirName();
+    ConfigManager::writeLastBackupDir(newDirName);
     // LocalManager::writeLastBackupDirName(gmtTime, machineTime);
 
 
@@ -65,11 +66,12 @@ void heartbeat::prepareBackupDirectory(string rootDirectory)
     //create_directories(devicePath + newDirName + "/home/martin/ECM3401");
 
 
-    if (!exists(devicePath) || lastBackupDirName.empty()) {
+    if (!exists(devicePath + lastBackupDirName)) {
         syslog(LOG_NOTICE, "before creating hard copy");
         createHardCopy(rootDirectory, devicePath + newDirName);
     } else {
         hardlinkLastBackup(rootDirectory, devicePath, devicePath + lastBackupDirName, devicePath + newDirName);
+        copyModifiedFiles(rootDirectory, devicePath + newDirName);
     }
 
 
@@ -117,6 +119,7 @@ void heartbeat::copyTreeStructure() {
 */
 
 void heartbeat::createHardCopy(const path &src, const path &dst) {
+    syslog(LOG_NOTICE, "inside create hard copy");
     if (is_directory(src)) {
         create_directories(dst);
         for (directory_entry& item : directory_iterator(src)) {
@@ -134,7 +137,7 @@ void heartbeat::createHardCopy(const path &src, const path &dst) {
         try {
             string destinationPath = devicePath + canonical(p).string();
             syslog(LOG_NOTICE, "source directory: %s", canonical(p).c_str());
-            syslog(LOG_NOTICE, "destination directory: %s", destinationPath.c_str());
+            syslog(LOG_NOTICE, destination directory: %s", destinationPath.c_str());
             copy(p, destinationPath);
         } catch(const filesystem_error& e) {
             if(e.code() == errc::permission_denied) {
@@ -170,24 +173,87 @@ void heartbeat::hardlinkLastBackup(const path &rootDirectory, const path &device
         throw runtime_error(dst.generic_string() + " not dir or file");
     }
 
-    vector<string> modifiedFilePaths = FileModManager::readAllModFiles();
+}
 
-    //int count = 0;
+void heartbeat::copyModifiedFiles(const path &rootDirectory, const path &devicePath) {
+    // SORT DIRECTORIES BY SHORTEST TO LONGER BEFORE ANY ACTION SO THAT
+    // SUBDIRECTORIES GET COPID LAST TO PREVENT ISSUES
+    vector<string> modifiedFilePaths = FileModManager::readAllModFiles();
+    compare c;
+    sort(modifiedFilePaths.begin(), modifiedFilePaths.end(), c);
 
     for (auto &path : modifiedFilePaths) {
 
-        //string withoutRoot = path.substr(rootDirectory.string().length(), path.length());
-        //string destinationPath = dst.string() + withoutRoot;
+        string withoutRoot = path.substr(rootDirectory.string().length(), path.length());
+        string destinationPath = devicePath.string() + withoutRoot;
+        //syslog(LOG_NOTICE, "destination modified file path: %s", destinationPath.c_str());
+        //syslog(LOG_NOTICE, "source modified file path: %s", path.c_str());
 
-        if (exists(path) && exists(destinationPath)) {
+
+        // edit to that directories can also be modified (user permissions updated and such)
+        if (exists(path)) {
+            if (is_directory(path)) {
+                if (!exists(destinationPath)) {
+                    syslog(LOG_NOTICE, "about to create new directory of path: %s", destinationPath.c_str());
+                    create_directories(destinationPath);
+                    continue;
+                }
+            }
+        } else if (exists(destinationPath)) {
+            if (is_directory(destinationPath)) {
+                if (!exists(path)) {
+                    remove_all(destinationPath);
+                    continue;
+                }
+            }
+       } else if (exists(destinationPath)) {
+            if (is_directory(destinationPath)) {
+                if (exists(path)) {
+                    struct stat attr;
+
+                    time_t mtime;
+                    struct utimbuf new_times;
+                    stat(path.c_str(), &attr);
+                    mtime = attr.st_mtime;
+                    new_times.actime = attr.st_atime; /* keep atime unchanged */
+                    new_times.modtime = attr.st_mtime;    /* set mtime to current time */
+                    syslog(LOG_NOTICE, "Last modified time: %s", ctime(&attr.st_mtime));
+                    copy(path, destinationPath);
+                    utime(destinationPath.c_str(), &new_times);
+                    continue;
+                }
+            }
+        }
+
+        if (exists(destinationPath)) {
             remove(destinationPath);
+        }
+        if (exists(path)) {
+            //getFileCreationTime(path.c_str());
+            syslog(LOG_NOTICE, "destination path to remove: %s", destinationPath.c_str());
+            syslog(LOG_NOTICE, "source path to remove: %s", path.c_str());
+            struct stat attr;
+
+            time_t mtime;
+            struct utimbuf new_times;
+            stat(path.c_str(), &attr);
+            mtime = attr.st_mtime;
+            new_times.actime = attr.st_atime; /* keep atime unchanged */
+            new_times.modtime = attr.st_mtime;    /* set mtime to current time */
+            syslog(LOG_NOTICE, "Last modified time: %s", ctime(&attr.st_mtime));
             copy(path, destinationPath);
+            utime(destinationPath.c_str(), &new_times);
+
         }
 
     }
-    syslog(LOG_NOTICE, "COUNT was: %d", count);
 }
 
+void heartbeat::getFileCreationTime(const char *path) {
+    struct stat attr;
+    stat(path, &attr);
+    syslog(LOG_NOTICE, "Last modified time: %s", ctime(&attr.st_mtime));
+}
 
 void heartbeat::backupModFiles(vector<string> allModifiedFiles)
 {

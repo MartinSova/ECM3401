@@ -13,7 +13,7 @@ void filemanager::existsConfigurationFile()
         } else {
             // create json file
             json j;
-            j["registeredDevices"] = {{{"vendorId", 2385}, {"productId", 5675}, {"filesToOmit", {"path1", "path2"}}, {"lastBackupDirName", ""}}, {{"vendorId", 2408124}, {"productId", 1212421}, {"filesToOmit", {"path3", "path4"}}, {"lastBackupDirName", ""}}};
+            //j["registeredDevices"] = {{{"vendorId", 2385}, {"productId", 5675}, {"filesToOmit", {"path1", "path2"}}, {"lastBackupDirName", ""}, {"lastBackupTime", 2}}, {{"vendorId", 2408124}, {"productId", 1212421}, {"filesToOmit", {"path3", "path4"}}, {"lastBackupDirName", ""}, {"lastBackupTime", 3}}};
             o << setw(4) << j << endl;
             syslog (LOG_INFO, "configuration.json created.");
         }
